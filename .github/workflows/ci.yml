@@ -1,0 +1,29 @@
+name: ci
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [dev]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate skills
+        run: |
+          for d in .agents/skills/*/; do
+            bash .agents/skills/skill-authoring/scripts/validate.sh "$d" 100
+          done
+
+      - name: Check max 100 lines per file
+        run: |
+          fail=0
+          while IFS= read -r f; do
+            [ -f "$f" ] && [ ! -L "$f" ] || continue
+            l=$(wc -l < "$f")
+            if [ "$l" -gt 100 ]; then echo "::error file=$f::${l} lines > 100"; fail=1; fi
+          done < <(git ls-files)
+          exit $fail
