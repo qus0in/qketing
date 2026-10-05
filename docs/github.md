@@ -17,6 +17,7 @@
 
 - `.agents/skills/*` 전체를 `skill-authoring/scripts/validate.sh`로 검증 (최대 100줄)
 - 추적되는 모든 파일 100줄 이하 (AGENTS.md 규칙), 심볼릭 링크 제외
+- 트리거: `dev` push(조기 피드백) + `main` 대상 PR. 그래서 한 커밋에 두 번 실행된다
 
 ## 라벨
 

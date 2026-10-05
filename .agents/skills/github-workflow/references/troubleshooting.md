@@ -18,3 +18,7 @@
   → `--auto` 없이 `gh pr merge --merge`로 즉시 머지
 - CI에서 커밋된 심볼릭 링크가 깨짐 → 로컬 절대경로로 링크 생성
   → `ln -s ../<target> <link>`처럼 상대경로로 생성
+- `gh pr checks --watch` 통과 직후 PR이 아직 OPEN → auto-merge 반영에 수 초~수십 초 지연
+  → 잠시 후 `gh pr view <n> --json state,mergedAt`로 재확인. 실패로 판단하지 않는다
+- 같은 커밋에 CI가 두 번 실행 → workflow에 `push: [dev]`와 `pull_request: [main]` 트리거가 모두 있음
+  → 정상 동작. 줄이려면 push 트리거 제거 (PR 전 조기 피드백은 잃음)
