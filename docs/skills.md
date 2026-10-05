@@ -20,6 +20,7 @@ bash .agents/skills/skill-authoring/scripts/validate.sh .agents/skills/<name> 10
 | - | - |
 | `skill-authoring` | Agent Skills 표준에 맞춰 스킬 작성/업데이트·검증, 작업 후 회고 반영 |
 | `github-workflow` | 라벨·이슈(plan/work/report)·dev→main PR·자동 머지 운영 규칙 |
+| `herdr-usage` | Herdr 사람 안내(설치·개념·키보드·설정)와 pane 안 에이전트 제어 요약 |
 
 CI가 모든 스킬을 자동 검증한다 (`docs/github.md` 참고).
 
@@ -27,3 +28,4 @@ CI가 모든 스킬을 자동 검증한다 (`docs/github.md` 참고).
 
 - 2026-10-05: `skill-authoring` 스킬 추가 (agentskills.io 스펙 기반, validate.sh 포함)
 - 2026-10-05: `github-workflow` 스킬 추가, `.claude/skills` 링크를 상대경로로 변경
+- 2026-10-05: `herdr-usage` 스킬 추가, skill-authoring에 공식 스킬 요약 원칙 추가 (v1.2)

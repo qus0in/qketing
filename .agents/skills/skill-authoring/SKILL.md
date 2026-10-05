@@ -2,7 +2,7 @@
 name: skill-authoring
 description: Agent Skills 표준(agentskills.io)에 맞춰 스킬을 새로 작성하거나 기존 스킬을 업데이트한다. SKILL.md 작성, frontmatter(name/description) 규칙 검증, references/scripts/assets 분리, 작업 후 회고 내용을 스킬에 반영할 때 사용한다. "스킬 만들어", "스킬 업데이트", "SKILL.md", "회고 반영" 같은 요청에 사용.
 metadata:
-  version: "1.1"
+  version: "1.2"
 ---
 
 # Skill Authoring
@@ -30,6 +30,8 @@ Agent Skills 표준에 맞는 스킬을 작성/갱신하는 절차.
 
 - 스킬 본문에 특정 레포 이름·절대경로·계정 정보를 하드코딩하지 않는다.
 - 레포마다 달라지는 값은 "호스트 레포 규칙을 따른다"로 쓰거나 스크립트 인자/환경변수로 받는다.
+- 도구가 공식 스킬이나 `--help`를 제공하면 원문을 복제하지 말고 요약한 뒤 원본을 가리킨다.
+  확인한 도구 버전은 `metadata`(예: `<tool>-version-checked`)에 남기고, 공식 스킬과 이름이 겹치지 않게 짓는다.
 
 ## 2. 작성
 
