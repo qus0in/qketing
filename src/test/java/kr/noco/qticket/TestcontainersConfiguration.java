@@ -3,6 +3,7 @@ package kr.noco.qticket;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -17,5 +18,13 @@ public class TestcontainersConfiguration {
     @ServiceConnection
     PostgreSQLContainer postgres() {
         return new PostgreSQLContainer(POSTGRES);
+    }
+
+    @Bean
+    @ServiceConnection(name = "redis")
+    GenericContainer<?> valkey() {
+        GenericContainer<?> container = new GenericContainer<>(
+                DockerImageName.parse("valkey/valkey:8.1.10-alpine3.24"));
+        return container.withExposedPorts(6379);
     }
 }
