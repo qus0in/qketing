@@ -21,6 +21,9 @@ bash .agents/skills/skill-authoring/scripts/validate.sh .agents/skills/<name> 10
 | `skill-authoring` | Agent Skills 표준에 맞춰 스킬 작성/업데이트·검증, 작업 후 회고 반영 |
 | `github-workflow` | 라벨·이슈(plan/work/report)·dev→main PR·자동 머지 운영 규칙 |
 | `herdr-usage` | Herdr 사람 안내(설치·개념·키보드·설정)와 pane 안 에이전트 제어 요약 |
+| `herdr-orchestration` | Orchestrator/Workers 분업: worker 모델 판별, 난이도별 배정, 위임·보고·외부 호출 규약 |
+| `spring-boot-conventions` | Spring MVC ui/app/domain/infra 레이어, 트랜잭션 경계, 예외·ProblemDetail, DTO·설정 규칙 |
+| `semver-milestones` | GitHub milestone 기반 SemVer 로드맵, SNAPSHOT→tag→Release 승격 절차 |
 
 CI가 모든 스킬을 자동 검증한다 (`docs/github.md` 참고).
 
@@ -29,3 +32,5 @@ CI가 모든 스킬을 자동 검증한다 (`docs/github.md` 참고).
 - 2026-10-05: `skill-authoring` 스킬 추가 (agentskills.io 스펙 기반, validate.sh 포함)
 - 2026-10-05: `github-workflow` 스킬 추가, `.claude/skills` 링크를 상대경로로 변경
 - 2026-10-05: `herdr-usage` 스킬 추가, skill-authoring에 공식 스킬 요약 원칙 추가 (v1.2)
+- 2026-10-05: `herdr-orchestration` 스킬 추가, github-workflow v1.1(커밋 시점은 레포 규칙을 따름) (#6)
+- 2026-10-06: `spring-boot-conventions`, `semver-milestones` 스킬 추가 (#18). 레포 값은 `docs/architecture.md`, `docs/roadmap.md`

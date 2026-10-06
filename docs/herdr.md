@@ -5,7 +5,7 @@
 ## 확인된 환경 (2026-10-05)
 
 - herdr 0.9.3 (stable 채널), 설치 경로 `~/.local/bin/herdr`
-- 이 레포의 에이전트(Claude Code)는 herdr pane 안에서 실행된다 (`HERDR_ENV=1`)
+- 이 레포의 에이전트들(Claude Code, Codex, OpenCode)은 herdr pane 안에서 실행된다 (`HERDR_ENV=1`)
 - 같은 herdr 서버에서 다른 레포의 에이전트(예: opencode)도 함께 돌아간다
   → `herdr agent list`에 다른 프로젝트 pane도 나온다. 이 레포 작업에서는 그 pane들을 제어하지 않는다
 - 공식 herdr 스킬(`npx skills add herdrdev/herdr --skill herdr -g`)은 전역에 설치되어 있지 않다.
@@ -14,7 +14,8 @@
 ## 이 레포에서의 사용 원칙
 
 - 테스트, 서버, 긴 명령은 현재 탭에 형제 pane을 만들어 `--no-focus`로 실행하고, 결과는 `pane read`로 확인한다
-- 리뷰 같은 병렬 에이전트 작업은 사용자가 요청한 경우에만 `agent start`로 시작한다
+- 같은 workspace의 다른 에이전트 pane은 Orchestrator/Workers 방식으로 활용한다 (`docs/orchestration.md`)
+- 새 에이전트를 `agent start`로 띄우는 것은 사용자가 요청한 경우에만 한다
 - 직접 만든 pane은 작업이 끝나면 정리한다 (`herdr pane close <id>`). 다른 pane은 건드리지 않는다
 
 ## 스킬을 공식 스킬과 분리한 이유

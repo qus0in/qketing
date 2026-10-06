@@ -21,10 +21,18 @@
 
 ## 라벨
 
-`memo`(사람 전용), `plan`, `work`, `report`(이슈), `feature`, `fix`, `docs`(PR).
+`memo`(사람 전용), `plan`, `work`, `report`, `handle`(이슈), `feature`, `fix`, `docs`(PR).
 의미는 `github-workflow/references/labels.md` 참고.
+
+## Milestone
+
+- SemVer 버전별 milestone 13개 (`0.1.0 — Bootstrap` ~ `1.0.0 — First Stable`). 목록과 범위는 `docs/roadmap.md`
+- 구현 `work` 이슈는 milestone을 지정하고 HEAD #7과 관련 plan 이슈를 reference한다
+- plan 이슈(#7~#16)는 여러 milestone에 걸치므로 milestone을 지정하지 않는다
 
 ## 변경 이력
 
 - 2026-10-05: 기본 라벨 삭제(memo만 유지), 라벨 6종 추가, dev 브랜치 생성, main 보호, CI 추가
 - 2026-10-05: `.claude/skills` 심볼릭 링크를 절대경로 → 상대경로(`../.agents/skills`)로 변경
+- 2026-10-06: `handle` 라벨 추가 (설정값 입력, 외부 처리 등 사람의 조치가 필요할 때)
+- 2026-10-06: SemVer milestone 13개 생성 (#18)
