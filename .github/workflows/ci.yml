@@ -7,7 +7,29 @@ on:
     branches: [dev]
 
 jobs:
+  # 문서(docs/, .agents/, .claude/, *.md)만 바뀌면 ci job을 skip한다.
+  # workflow paths-ignore를 쓰면 필수 체크 `ci`가 대기 상태로 남아 머지가 막히므로 job 조건으로 처리한다.
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - id: filter
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          files=$(git diff --name-only "$BASE" "$GITHUB_SHA" 2>/dev/null) || files=unknown
+          code=$(echo "$files" | grep -vE '^(docs/|\.agents/|\.claude/)|\.md$' || true)
+          echo "code=$([ -n "$code" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "code files:"; echo "$code"
+
   ci:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
