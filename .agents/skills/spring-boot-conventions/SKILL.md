@@ -2,7 +2,7 @@
 name: spring-boot-conventions
 description: Spring Boot MVC의 ui/app/domain/infra 레이어, 트랜잭션, 예외, DTO와 설정 컨벤션을 적용하고 검토한다. Spring MVC 구현·리팩터링·코드 리뷰에서 사용한다. "레이어 의존 방향", "트랜잭션 경계", "ProblemDetail", "record DTO", "ConfigurationProperties" 같은 요청에 사용.
 metadata:
-  version: "1.1"
+  version: "1.2"
 ---
 
 # Spring Boot 컨벤션
@@ -33,6 +33,7 @@ Spring MVC 애플리케이션을 작은 책임과 명시적인 경계로 구현�
 - DB 조회 use case는 `@Transactional(readOnly = true)`, 변경은 `@Transactional`이다.
 - unchecked custom exception을 사용하고 API는 ProblemDetail, SSR은 오류 view로 처리한다.
 - `@Data`와 field injection을 피하고 필요한 Lombok 기능만 선택한다.
+- 지역 변수 타입 추론 `var`를 쓰지 않고 명시 타입을 쓴다 (호스트가 허용하면 예외).
 - 별도 Mapper 계층을 만들지 않고 책임에 맞는 `from/of/toXxx`로 변환한다.
 - `common/util/config`를 최상위 레이어나 무관한 코드의 보관함으로 만들지 않는다.
 - 캐시 TTL과 원본 조회를 명시하고 정합성의 최종 판정은 영속 원본에서 수행한다.

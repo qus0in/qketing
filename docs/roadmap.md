@@ -64,6 +64,13 @@ Milestone은 특정 layer에 귀속시키지 않고 HEAD #7에서 통합 관리�
 - milestone 진행상태와 버전 승격 판단은 HEAD #7에서만 관리한다.
 - 범위가 커져도 HEAD 본문을 다시 단일 대형 문서로 만들지 않는다.
 
-## 5. 변경 이력
+## 5. minor 승격 체크리스트
+
+1. milestone의 work 이슈 완료, `./gradlew build` 통과
+2. E2E 통과: `gh workflow run e2e.yml --ref dev` 성공 + artifact `e2e-report` 스크린샷 검토 (로컬 `./gradlew e2eTest`)
+3. `handle` 이슈로 사용자 승인 → version `X.Y.0` → tag `vX.Y.0` → GitHub Release → `X.(Y+1).0-SNAPSHOT`
+
+## 6. 변경 이력
 
 - 2026-10-06: milestone 13개(0.1.0~1.0.0) 생성, 로드맵 문서 신규 작성
+- 2026-10-06: minor 승격 체크리스트에 Playwright E2E 추가 (#25)

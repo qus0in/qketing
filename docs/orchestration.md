@@ -41,3 +41,8 @@
   - opencode-1: roadmap 문서(17초), 스킬 리뷰에서 유효 누락 4건. 리뷰어로 쓸 만하다
   - opencode-2: 이슈 8개 사실 추출(2분 24초), 원문과 일치
   - 문제: OpenCode가 새 session을 만들 때마다 이름이 해제되어 `agent wait`이 즉시 실패함. 긴 보고는 화면에서 잘림
+- 2026-10-06 0.1.0 Bootstrap (#22), codex-2 구현 · codex-1 서브 헤드 리뷰 · OpenCode 병렬
+  - codex-2(Luna): 골격·오류 처리 구현. 샌드박스라 빌드 불가 → orchestrator가 빌드하며 BOM 누락 1건 수정
+  - codex-1(Sol): 리뷰 2회, 실제 결함(CI 줄 수 검사에 wrapper 걸림, 405 Allow 누락, advice 순서) 지적. 서브 헤드로 적합
+  - opencode-1: 템플릿·색상 수정, 범위 밖 404 JSON 문제를 먼저 발견. opencode-2: Dockerfile 한 번에 통과
+  - 충돌: opencode-1이 메시지에 접두사를 넣자 codex-2 테스트 실패 → 공유 파일 의미까지 계약에 적기

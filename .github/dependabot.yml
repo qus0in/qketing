@@ -1,0 +1,9 @@
+version: 2
+updates:
+  # GitHub Actions는 commit SHA로 고정하고 Dependabot이 갱신 PR을 만든다 (#16)
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    target-branch: dev
+    labels: [fix]

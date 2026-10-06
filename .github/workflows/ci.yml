@@ -6,15 +6,18 @@ on:
   push:
     branches: [dev]
 
+permissions:
+  contents: read
+
 jobs:
   # 문서(docs/, .agents/, .claude/, *.md)만 바뀌면 ci job을 skip한다.
   # workflow paths-ignore를 쓰면 필수 체크 `ci`가 대기 상태로 남아 머지가 막히므로 job 조건으로 처리한다.
   changes:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       code: ${{ steps.filter.outputs.code }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
@@ -30,9 +33,11 @@ jobs:
   ci:
     needs: changes
     if: needs.changes.outputs.code == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Validate skills
         run: |
@@ -45,7 +50,21 @@ jobs:
           fail=0
           while IFS= read -r f; do
             [ -f "$f" ] && [ ! -L "$f" ] || continue
+            # 생성된 Gradle wrapper 스크립트와 바이너리는 작성 코드가 아니므로 제외
+            case "$f" in gradlew|gradlew.bat) continue ;; esac
+            grep -Iq . "$f" || continue
             l=$(wc -l < "$f")
             if [ "$l" -gt 100 ]; then echo "::error file=$f::${l} lines > 100"; fail=1; fi
           done < <(git ls-files)
           exit $fail
+
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      # wrapper checksum 검증 포함
+      - uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+
+      - name: Build (compile/test)
+        run: ./gradlew build --no-daemon

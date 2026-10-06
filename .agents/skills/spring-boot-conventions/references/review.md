@@ -44,6 +44,12 @@
 - 운영 schema가 자동 변경됨 → ddl-auto update 사용 → validate와 migration 단일 관리 적용.
 - 정렬 입력이 쿼리 표현식으로 실행됨 → 입력 path 직접 사용 → 고정 allow-list 매핑.
 - 요청 id가 다음 요청에 남음 → MDC 정리 누락 → finally 정리와 비동기 context 정책 확인.
+- starter 버전을 못 찾음(`Could not find ...starter-x:.`) → BOM 미적용 → dependency-management plugin 또는 platform BOM 추가.
+- 오류 화면에 escape된 `<title …>` 마크업이 출력됨 → layout fragment 파라미터명이 model 속성과 같아 가려짐
+  → 파라미터명을 구분(`titleTag`)하고, 테스트는 문구 포함이 아니라 escape 마크업 부재까지 검증한다.
+- 브라우저 404가 JSON으로 나옴 → controller 밖 오류(no handler, 405)는 패키지 한정 advice가 못 잡음
+  → 최고 순위 advice에서 `produces`로 HTML/JSON 분기. ProblemDetail 자동 handler(order 0)보다 앞서야 한다.
+- 브랜드 prefix가 API title에도 붙음 → 메시지 하나를 HTML `<title>`과 API에 공용 → 메시지는 순수 문구, prefix는 템플릿에서.
 
 ## 회고와 보고
 

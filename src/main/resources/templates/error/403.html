@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/base :: layout(~{::title}, ~{::main})}">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="#{app.name} + ' · ' + (${title} ?: #{error.403.title})">접근 권한이 없습니다</title>
+</head>
+<body>
+  <main id="main" class="container">
+    <section aria-labelledby="error-title">
+      <p class="error-status" th:text="${status}">403</p>
+      <h1 id="error-title" th:text="${title} ?: #{error.403.title}">접근 권한이 없습니다</h1>
+      <p th:text="${message} ?: #{error.403.message}">접근 권한이 없습니다.</p>
+      <p class="error-request" th:if="${requestId != null}">
+        <span th:text="#{error.requestId}">요청 ID</span>:
+        <code th:text="${requestId}">-</code>
+      </p>
+      <p><a class="button" th:href="@{/}" th:text="#{error.home}">홈으로 돌아가기</a></p>
+    </section>
+  </main>
+</body>
+</html>

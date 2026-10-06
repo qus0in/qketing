@@ -1,0 +1,32 @@
+sourceSets {
+    e2eTest {
+        java.srcDir 'src/e2eTest/java'
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+configurations {
+    e2eTestImplementation.extendsFrom testImplementation
+    e2eTestRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
+dependencies {
+    e2eTestImplementation 'com.microsoft.playwright:playwright:1.63.0'
+}
+
+tasks.register('e2eTest', Test) {
+    testClassesDirs = sourceSets.e2eTest.output.classesDirs
+    classpath = sourceSets.e2eTest.runtimeClasspath
+    useJUnitPlatform()
+    systemProperty 'e2e.screenshots', layout.buildDirectory.dir('reports/e2e').get().asFile.absolutePath
+}
+
+tasks.register('playwrightInstall', JavaExec) {
+    classpath = configurations.e2eTestRuntimeClasspath
+    mainClass = 'com.microsoft.playwright.CLI'
+    def installArgs = ['install']
+    if (project.hasProperty('with-deps')) installArgs.add('--with-deps')
+    installArgs.add('chromium')
+    args installArgs
+}

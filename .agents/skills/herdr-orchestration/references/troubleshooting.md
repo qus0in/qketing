@@ -29,3 +29,7 @@
   `wait` 결과는 버리지 말고 exit code를 확인한다
 - 긴 보고가 앞부분부터 잘리고 STATUS 줄이 안 보임 → `recent-unwrapped`가 화면 한 줄로 이어 붙여 scrollback 범위를 넘김
   → 보고가 길어질 작업(리뷰, 추출)은 처음부터 `/tmp/<task-id>.md`에 쓰게 하고 경로만 답하게 한다
+- Codex worker가 빌드·테스트를 못 돌림 (`Operation not permitted`, `UnknownHostException`) → 샌드박스가 홈 캐시 쓰기·네트워크 차단
+  → 코드 작성만 맡기고 빌드·테스트·실행은 Orchestrator가 한다. 프롬프트에 미리 적어 재시도 낭비를 막는다
+- 병렬 작업 결과가 서로 깨짐 (한 worker가 공유 메시지를 바꾸자 다른 worker 테스트 실패) → 공유 계약의 의미가 모호
+  → 공유 파일(메시지, 설정)은 소유자 1명, 값의 의미(예: 접두사 포함 여부)까지 계약에 적는다

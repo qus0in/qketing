@@ -1,0 +1,43 @@
+name: e2e
+
+# minor release tag PR 전에 수동 실행한다 (docs/roadmap.md 승격 체크리스트).
+# 모든 PR에서 돌리지 않는다: 브라우저 설치 비용이 크고 필수 체크가 아니다.
+# 테스트가 @SpringBootTest(random port)로 앱을 직접 띄우므로 별도 서버가 필요 없다.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+
+      # CI의 Chromium은 runner에 OS 의존성과 함께 설치한다 (~/.cache/ms-playwright)
+      - name: Install Chromium
+        run: ./gradlew playwrightInstall -Pwith-deps --no-daemon
+
+      - name: Run E2E
+        run: ./gradlew e2eTest --no-daemon
+
+      # 실패해도 스크린샷과 테스트 리포트를 남긴다
+      - if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: e2e-report
+          path: |
+            build/reports/e2e
+            build/reports/tests/e2eTest
+          retention-days: 14
