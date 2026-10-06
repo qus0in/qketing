@@ -2,25 +2,24 @@
 
 방법은 `.agents/skills/herdr-orchestration` 스킬을 따른다. 여기에는 이 레포의 현재 구성과 운영 기록만 남긴다.
 
-## 현재 구성 (2026-10-06 실측, workspace `wW`)
+## 현재 구성 (2026-10-06 16:00 최종 실측, workspace `wW`)
 
-| 탭 라벨 | tab | pane | 이름 | 에이전트 | 모델 · effort (화면 표기) | 역할 |
-| - | - | - | - | - | - | - |
-| orchestrator | wW:t1 | wW:p1 | orchestrator | Claude Code | Opus 5.5 | 분해·배정·검증(빌드)·통합·git·보고, **최종 리뷰** |
-| worker1 | wW:t6 | wW:p6 | agy-1 | agy | Claude Sonnet 5.5 · medium | 가끔: 정리·요약, 큰 리뷰 보조 |
-| worker2 | wW:t5 | wW:p5 | (이름 없음) | Codex | GPT-6-Luna high | 주 구현, opencode 산출물 리뷰 |
-| worker3 | wW:t3 | wW:p3 | opencode-1 | OpenCode | DeepSeek V4.1 Flash Ollama Cloud · max | 명확한 구현·테스트·문서 |
-| worker4 | wW:t4 | wW:p4 | opencode-2 | OpenCode | MiMo-V2.6-Flash Free OpenCode Zen (effort 표시 없음) | 요약·사실 조회·단순 수정 |
+| 탭 라벨 | tab | pane | 에이전트 | 모델 · effort | 역할 |
+| - | - | - | - | - | - |
+| orchestrator | wW:t1 | wW:p1 | Claude Code | Opus 5.5 | 분해·배정·빌드 검증·통합·git·최종 리뷰 |
+| worker1 | wW:t6 | wW:p6 | OpenCode | Space Bunny Free · OpenCode Zen · max | 주 구현·테스트 |
+| worker2 | wW:t5 | wW:p5 | OpenCode | Muse Spark 1.3 Contributor · OpenCode Go (effort 표시 없음) | 요약·정리·단순 수정 |
+| worker3 | wW:t3 | wW:p3 | OpenCode | DeepSeek V4.1 Flash · Ollama Cloud · max | 주 구현·테스트·문서 |
+| worker4 | wW:t4 | wW:p4 | OpenCode | MiMo-V2.6-Flash · Free · OpenCode Zen (effort 표시 없음) | 요약·사실 조회·단순 수정 |
 
-- 근거: 2026-10-06 hermes 화면 실측. 구성 확정 = 오케스트레이터 1 + 워커 4
-- 2026-10-06 Sol pane 사라짐 → 리뷰는 orchestrator(최종)·Luna(opencode 산출물)
-- 호출은 `herdr-call.sh`로 탭 라벨(worker1~4) 또는 tab id 사용, 이름 의존 금지 (wW:p5 이름 반복 유실)
+- 근거: 2026-10-06 사용자 재배정(2회), hermes 16:00 실측
+- 워커 4개 모두 OpenCode, 이름 없음 → 지목은 탭 라벨/tab id만 (다른 workspace에 같은 라벨이 있으면 tab id)
+- 티어: max 2개(worker1, worker3) = 주 구현, effort 미표시 2개(worker2, worker4) = 요약·정리·단순 수정
+- 리뷰: 최종은 orchestrator, worker 산출물 교차 리뷰는 max 2개끼리
+- 호출은 `herdr-call.sh`로 탭 라벨(worker1~4) 또는 tab id 사용, 이름 의존 금지
 - 이름은 에이전트가 재시작되면 해제된다. 세션을 시작할 때 `discover-workers.sh`로 확인하고 다시 붙인다.
 - 모델이 바뀌면 이 표를 갱신한다.
-- 2026-10-06 사용자 지시: Sol(codex-1)은 직접 구현보다 리뷰·서브 헤드로 쓰고, 주 구현은 Luna(codex-2)가 맡는다.
-  서브 헤드는 맡은 영역의 하위 작업을 나누고 결과를 검수하지만, git과 최종 머지 판단은 orchestrator가 한다
-- 2026-10-06 사용자 지시: orchestrator는 직접 하기 전에 Luna(주 구현)·opencode에게 먼저 위임하는 것이 기본값이다.
-  codex 샌드박스에는 Java/Gradle이 없으므로 빌드·테스트는 orchestrator가 한다
+- 2026-10-06 사용자 지시: orchestrator는 직접 하기 전에 worker에게 먼저 위임하는 것이 기본값이다.
 
 ## worker 호출
 
@@ -31,10 +30,10 @@
 | 탭 라벨 | 이름 (참고용) | tab/pane |
 | - | - | - |
 | `orchestrator` | orchestrator | wW:t1/p1 |
-| `worker1` | agy-1 | wW:t6/p6 |
-| `worker2` | (이름 없음, 반복 유실) | wW:t5/p5 |
-| `worker3` | opencode-1 | wW:t3/p3 |
-| `worker4` | opencode-2 | wW:t4/p4 |
+| `worker1` | (이름 없음) | wW:t6/p6 |
+| `worker2` | (이름 없음) | wW:t5/p5 |
+| `worker3` | (이름 없음) | wW:t3/p3 |
+| `worker4` | (이름 없음) | wW:t4/p4 |
 
 ## 이 레포 규칙과의 연결 (AGENTS.md)
 
@@ -71,3 +70,9 @@
 - 2026-10-06 0.2.0 착수 (#27): opencode-2가 migration을 실제 PG로 자가 검증, codex-2 entity·QueryDSL allow-list, Sol 검수
 - 2026-10-06 codex-2 이름 3회 유실, 이름으로 보낸 T27-9 유실 → herdr-call 도입 (Sol 작성, orchestrator 실소켓 검증에서 `--` 미지원 버그 발견·수정)
 - 2026-10-06 0.3.0 16 최종 리뷰는 agy-1이 대행(승인)
+- 2026-10-06 worker1: agy-1(Sonnet 5.5 medium) → OpenCode Space Bunny Free max로 교체, 진행 중이던 T40-7 유실 후 재배정
+- 2026-10-06 재배정: codex(Sol·Luna)·agy(Sonnet) 퇴장 → 워커 4개 OpenCode. T40-9(seat hold)는 Luna→Muse Spark로 이어짐
+- 2026-10-06 0.4.0 (#40): worker 4개 모두 OpenCode. 재배정 중 worker1의 T40-7 유실 → 재배정, worker2(Luna→Muse Spark) T40-9 seat hold 정상 완료
+- worker3이 다른 보고서의 'T40-10 제안'을 따라 범위 밖 hold·확정 연동 구현 → #11 설계와 일치해 유지, 대신 adapter 수준 DB 경합 테스트 추가
+- 동시 Gradle 실행으로 test-results 충돌, worker1 130줄 파일 → 재지시. 다른 workspace(wX)와 탭 라벨 중복 → herdr-call이 현재 workspace 우선 해석
+- 최종 리뷰(orchestrator): Valkey 키 외부 식별자 검증 추가, session 키 문서 정정

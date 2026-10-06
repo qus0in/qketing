@@ -25,10 +25,17 @@ load() {
   jq -e '.result.tabs | type == "array"' >/dev/null <<<"$tabs"
   jq -e '.result.agents | type == "array"' >/dev/null <<<"$agents"
 }
+# 현재 workspace: pane current 조회 우선, 실패 시 HERDR_PANE_ID 앞부분(wW:p4 → wW).
+current_workspace() {
+  local json ws=''
+  if json="$(query pane current)"; then ws="$(jq -r '.result.pane.workspace_id // empty' <<<"$json")"; fi
+  if [ -z "$ws" ]; then ws="${HERDR_PANE_ID:-}"; ws="${ws%%:*}"; fi
+  printf '%s' "$ws"
+}
 resolve() {
   local matches count
   [ -n "$1" ] || fail '빈 식별자'
-  matches="$(jq -cn --arg target "$1" --argjson p "$panes" \
+  matches="$(jq -cn --arg target "$1" --arg ws "${current_ws:-}" --argjson p "$panes" \
     --argjson t "$tabs" --argjson a "$agents" '
     $p.result.panes as $panes | $t.result.tabs as $tabs |
     [$panes[] | select(.pane_id == $target)] as $direct |
@@ -43,8 +50,12 @@ resolve() {
       if ($name|length) != 1 then error("duplicate agent name")
       else [$panes[] | select(.pane_id == $name[0].pane_id) | .pane_id] end
     elif ($label|length) > 0 then
-      if ($label|length) != 1 then error("duplicate tab label")
-      else [$panes[] | select(.tab_id == $label[0].tab_id) | .pane_id] end
+      ([$label[] | select($ws != "" and .workspace_id == $ws)]) as $local |
+      if ($local|length) == 1 then [$panes[] | select(.tab_id == $local[0].tab_id) | .pane_id]
+      elif ($local|length) > 1 then error("duplicate tab label")
+      elif ($label|length) == 1 then [$panes[] | select(.tab_id == $label[0].tab_id) | .pane_id]
+      else error("duplicate tab label")
+      end
     else [] end')" || fail "식별자 해석 실패: $1"
   count="$(jq 'length' <<<"$matches")"
   [ "$count" -gt 0 ] || fail "대상 없음: $1 (status로 확인)"
@@ -61,6 +72,7 @@ if [ "$action" = wait ] || [ "$action" = read ]; then
   [[ "$2" =~ ^[1-9][0-9]*$ ]] || fail 'ms/줄수는 양의 정수여야 함'
 fi
 load
+current_ws="$(current_workspace)"
 case "$action" in
   status)
     jq -cn --argjson p "$panes" --argjson t "$tabs" --argjson a "$agents" '
