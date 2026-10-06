@@ -24,6 +24,31 @@
 - 그래서 `herdr-usage`는 요약과 사람 안내에 집중하고, 정확한 문법은 `herdr --skill`과 `--help`로 확인하도록 했다
 - 이름이 `herdr`가 아닌 이유: 공식 스킬을 전역 설치했을 때 이름이 충돌하지 않게 하기 위해서
 
+## 종료 후 복구 절차
+
+herdr 재시작(또는 머신 재부팅) 후 workspace를 저장한 상태로 되돌릴 때 쓴다.
+
+1. 저장: `bash .agents/skills/herdr-usage/scripts/ws-save.sh`
+2. herdr 종료 (또는 재부팅)
+3. herdr 재기동 후 attach
+4. 대조: `bash .agents/skills/herdr-usage/scripts/ws-restore.sh` (dry-run, 차이만 출력)
+5. 적용: `bash .agents/skills/herdr-usage/scripts/ws-restore.sh --apply`
+6. 확인: `bash .agents/skills/herdr-orchestration/scripts/herdr-call.sh status` 로 이름·라벨 대조
+
+### 매니페스트 위치
+
+- 기본: `~/.config/herdr/workspace-layout.json` — 레포에 두지 않는다
+- 이유: 머신 고유 절대경로, 휘발성 pane id, 여러 레포(qketing, plantaro)의 workspace가 함께 담긴다.
+  레포에 커밋하면 경로 노출과 잦은 변경이 생긴다
+- hermes의 `workspace-manifest.json`과 schema가 달라 파일을 분리한다. 공유하면 저장 시 hermes 복구 파일을 덮어쓴다.
+- 필요하면 매니페스트 경로 인자나 `HERDR_MANIFEST` 환경변수로 바꾼다
+
+### 사실 기록
+
+- herdr는 `~/.config/herdr/session.json`으로 레이아웃은 복원하지만 에이전트 이름은 복원하지 않는다.
+  → 5단계(rename)가 필요하다
+
 ## 변경 이력
 
+- 2026-10-06: '종료 후 복구 절차' 섹션 추가 (ws-save/ws-restore, 매니페스트는 `~/.config/herdr`)
 - 2026-10-05: `herdr-usage` 스킬 추가 (herdr.dev/agent-guide.md, `herdr --skill` 0.9.3 기반) (#4)

@@ -6,6 +6,11 @@ spring:
       enabled: true
   thymeleaf:
     cache: false
+  # schema는 Flyway만 관리하고 JPA는 검증만 한다 (#12). 접속 정보는 SPRING_DATASOURCE_* env로 주입
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
 
 server:
   port: 8080

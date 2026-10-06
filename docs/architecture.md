@@ -51,6 +51,13 @@
 - API controller는 `ui.<feature>.api`에 둔다. requestId는 `X-Request-Id`(검증) 또는 UUID, 응답 헤더·MDC·ProblemDetail에 같은 값
 - 미룸: Boot 기본 ProblemDetail handler의 입력 오류 경로(첫 입력 endpoint에서), ErrorCode의 HttpStatus 분리
 
+## 영속 구조 (0.2.0, #27 #28)
+
+- migration: `src/main/resources/db/migration` (V1 pgvector, V2 performance·seat + `uk_seat_position`). 운영 `ddl-auto=validate`
+- entity·repository·QueryDSL 조회는 `infra.persistence.<feature>`. app port/use case와 `@Transactional`은 0.3.0부터
+- 테스트 DB: Testcontainers `pgvector/pgvector:pg17` 공용 설정(`TestcontainersConfiguration`), 로컬 실행은 `bootTestRun`
+- 정렬은 enum allow-list만 (사용자 문자열을 path로 쓰지 않음, #8)
+
 ## 구현 직전 사용자 확인 필요
 
 - AI model id, embedding model, RAG/memory 구조 (#13)
@@ -58,6 +65,7 @@
 
 ## 변경 이력
 
+- 2026-10-06: 영속 구조 추가 (#27)
 - 2026-10-06: 패키지 kr.noco, 코딩 규칙, Playwright Java E2E 도입 (#25)
 - 2026-10-06: 오류 처리 구조 추가 (#22)
 - 2026-10-06: 최초 작성. #8 #16 #17과 #9~#15의 Bootstrap 관련 결정 요약 (#18)

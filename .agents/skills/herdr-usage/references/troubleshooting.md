@@ -20,3 +20,10 @@
 - 설정 변경 후 이상 동작 → config.toml 오류
   → `herdr config check`로 검증한 뒤 `herdr server reload-config`
 - CLI 종료 코드 → 1: 서버 에러 (stderr에 JSON), 2: 문법 에러
+
+- 재시작 후 topology는 있는데 agent 이름이 없음 → session.json은 이름을 복원하지 않음 → ws-save 매니페스트로 dry-run 후 ws-restore --apply에서 저장 이름 재부여.
+- tab 번호를 pane 번호로 바꿔 잘못 복구 → 두 ID의 번호는 독립적 → 목록·생성 응답으로 연결하고 문자열 치환 금지.
+- 복구가 중복 라벨/schema 오류로 중단 → 연결이 모호하거나 저장 파일 불량 → 파일·현 구성을 확인하고 다시 dry-run, 첫 항목 임의 선택 금지.
+- 복구 출력에 skip이 있음 → 저장 이름 없음/cwd·kind·이름 점유 충돌 → 임의 이름·재시작 없이 사람이 대상을 확인, 기존 pane을 닫지 않는다.
+- 정확한 분할 비율이 안 돌아옴 → 매니페스트는 pane 바인딩만 저장 → session.json의 기존 topology를 재사용하거나 사람이 크기를 조정한다.
+- 다른 도구의 파일이 schema 오류로 거부되거나 덮어써짐 → 매니페스트 schema가 다름 → 기본 `~/.config/herdr/workspace-layout.json`을 사용하고 다른 도구와 매니페스트 파일 공유 금지.
