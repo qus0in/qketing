@@ -3,7 +3,7 @@ name: herdr-orchestration
 description: herdr 안에서 한 pane의 에이전트를 Orchestrator로, 같은 workspace의 다른 에이전트 pane들을 Workers로 두고 업무를 분해·배분·검증한다. 각 worker의 모델과 effort를 화면에서 판별해 난이도별로 배정하고, 사람의 직접 채팅과 외부 에이전트(hermes 등)의 herdr CLI 호출을 모두 받는다. "오케스트레이션", "worker에게 맡겨", "병렬로 나눠", "패널 배분", 외부 에이전트 요청 처리에 사용.
 compatibility: Requires herdr CLI (HERDR_ENV=1), jq, bash
 metadata:
-  version: "1.2"
+  version: "1.3"
   herdr-version-checked: "0.9.3"
 ---
 

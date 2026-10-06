@@ -6,7 +6,7 @@
 
 | 탭 라벨 | tab | pane | 에이전트 | 모델·effort(화면 표기) | 티어·역할 |
 | - | - | - | - | - | - |
-| orchestrator | wW:t1 | wW:p1 | Claude Code | Opus 5.5 | 분해·배정·빌드 검증·통합·git·최종 리뷰 |
+| orchestrator | wW:t1 | wW:p1 | Codex | GPT-6 (세션 지시 기준, effort 미확인) | 분해·배정·빌드 검증·통합·git·최종 리뷰 |
 | worker1 | wW:t6 | wW:p6 | OpenCode | MiMo-V2.6-Flash · OpenCode Go (effort 표시 없음) | 하: 요약·정리·단순 수정 |
 | worker2 | wW:t5 | wW:p5 | OpenCode | Muse Spark 1.3 Contributor · OpenCode Go (effort 표시 없음) | 하: 요약·정리·단순 수정 |
 | worker3 | wW:t3 | wW:p3 | OpenCode | GPT-6 Luna · OpenCode Go · max | 상: 주 구현, worker 산출물 교차 리뷰 |
@@ -49,6 +49,7 @@
 
 ## 운영 기록
 
+- 2026-10-06 역할 재확인: Codex `wW:p1`을 `orchestrator`로 rename하고 응답에서 확인. `pane current --current`는 OpenCode `wW:p5`를 반환하여 agent list의 종류·cwd·대화 제목으로 본인을 식별했다. worker 모델 표는 이번에 재검증하지 않았다.
 - 2026-10-05 dry-run (#6), 읽기 전용 작업 3개를 동시에 위임
   - codex-1 (리뷰, 상): 실제 버그 2건을 찾음 (pane 이동 후 환경변수가 예전 값으로 남음, `LC_ALL=C`에서 유니코드 깨짐). 샌드박스가 herdr 소켓을 막아 BLOCKED로 보고
   - opencode-1 (정합성 점검, 중): 1분 21초. 문서 모순 7건 중 유효 4건 (스킬 목록 누락, 커밋 규칙 충돌 등)
