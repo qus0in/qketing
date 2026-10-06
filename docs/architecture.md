@@ -58,6 +58,21 @@
 - 테스트 DB: Testcontainers `pgvector/pgvector:pg17` 공용 설정(`TestcontainersConfiguration`), 로컬 실행은 `bootTestRun`
 - 정렬은 enum allow-list만 (사용자 문자열을 path로 쓰지 않음, #8)
 
+## 티켓팅 확정 구조 (0.3.0, #33)
+
+- 확정 충돌: `seat.sale_status`를 `AVAILABLE`→`SOLD`로 바꾸는 단일 conditional update
+  (`id`·`performance_id`·`sale_status='AVAILABLE'` 조건, 영향 1행만 성공, 0행이면 `CONFLICT`)
+- 멱등: 전역 `idempotency_key`(최대 128자). 같은 키·같은 입력은 기존 booking/ticket 반환,
+  같은 키·다른 입력은 `INVALID_INPUT`
+- claim: `INSERT ... ON CONFLICT (idempotency_key) DO NOTHING RETURNING id`,
+  충돌이면 별도 SELECT로 commit된 결과 조회 (READ COMMITTED 전제, `REQUIRES_NEW`·격리수준 변경 금지)
+- 오류 계약: 없는 공연/좌석 `NOT_FOUND`(`fk_booking_seat` 위반만 변환), 이미 SOLD `CONFLICT`,
+  입력 오류 `INVALID_INPUT`
+- V3 제약: `uk_booking_idempotency_key`, `uk_ticket_sale(performance_id, seat_id)`,
+  `ticket.booking_id` unique, composite FK `fk_booking_seat`·`fk_ticket_booking`
+- transaction은 app service public 메서드만. `@Service`는 실제 adapter 완성 후 등록
+- 후속: #37 (mid 1, low 3)
+
 ## 구현 직전 사용자 확인 필요
 
 - AI model id, embedding model, RAG/memory 구조 (#13)
@@ -65,6 +80,7 @@
 
 ## 변경 이력
 
+- 2026-10-06: 티켓팅 확정 구조 추가 (#33)
 - 2026-10-06: 영속 구조 추가 (#27)
 - 2026-10-06: 패키지 kr.noco, 코딩 규칙, Playwright Java E2E 도입 (#25)
 - 2026-10-06: 오류 처리 구조 추가 (#22)
