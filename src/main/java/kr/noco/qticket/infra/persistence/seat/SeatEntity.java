@@ -2,6 +2,8 @@ package kr.noco.qticket.infra.persistence.seat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,6 +37,10 @@ public class SeatEntity {
     @Column(name = "seat_number", nullable = false)
     private Integer seatNumber;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "sale_status", nullable = false, length = 16)
+    private SaleStatus saleStatus;
+
     @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
     private Instant createdAt;
 
@@ -46,10 +52,16 @@ public class SeatEntity {
         this.section = section;
         this.rowLabel = rowLabel;
         this.seatNumber = seatNumber;
+        this.saleStatus = SaleStatus.AVAILABLE;
     }
 
     public static SeatEntity of(Long performanceId, String section, String rowLabel,
                                 Integer seatNumber) {
         return new SeatEntity(performanceId, section, rowLabel, seatNumber);
+    }
+
+    public enum SaleStatus {
+        AVAILABLE,
+        SOLD
     }
 }

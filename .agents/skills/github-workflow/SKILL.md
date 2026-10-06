@@ -3,7 +3,7 @@ name: github-workflow
 description: gh CLI로 GitHub 이슈·PR·라벨·브랜치 보호를 운영하는 규칙. 업무 요청을 받으면 plan/work 이슈로 계획과 진척을 남기고, dev 브랜치에서 main으로 feature/fix/docs 라벨 PR을 열어 CI 통과 시 자동 머지한다. 현황 보고 요청 시 report 이슈를, 설정값 입력·외부 처리처럼 사람의 조치가 필요하면 handle 이슈를 쓴다. 이슈 작성, PR 생성, 라벨, 브랜치 보호, 자동 머지, 보고 요청에 사용.
 compatibility: Requires git and an authenticated gh CLI
 metadata:
-  version: "1.2"
+  version: "1.3"
 ---
 
 # GitHub Workflow
@@ -18,6 +18,7 @@ metadata:
 - `main`에는 직접 push하지 않는다. 모든 변경은 `dev` → `main` PR로, CI 통과 후 자동 머지한다.
 - 커밋·push·PR을 **언제** 하는지는 호스트 레포 규칙을 따른다 (예: 요청할 때만). 이 스킬은 **방법**만 정한다.
 - 레포마다 브랜치명, 라벨, CI 체크 이름이 다를 수 있다. 호스트 레포 문서를 먼저 확인한다.
+- 진행을 멈추면 이슈에 `hold` 상태 라벨을 붙이고 재개하면 제거한다. 사람 조치 요청인 `handle`과 함께 쓸 수 있다.
 
 ## 1. 업무 요청을 받았을 때
 

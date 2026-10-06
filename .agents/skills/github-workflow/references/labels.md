@@ -7,6 +7,7 @@
 | `work` | 이슈/댓글 | 에이전트 | 작업 진척, 결정, 막힌 점을 기록할 때 |
 | `report` | 이슈 | 에이전트 | 사용자가 현황·상황 보고를 요청했을 때 |
 | `handle` | 이슈 | 에이전트 → 사람이 처리 | 설정값 입력, 외부 처리(인증·결제·외부 서비스) 등 사람의 조치가 필요할 때 |
+| `hold` | 이슈 | 에이전트 | 외부 의존·사용자 결정·다른 작업 완료 대기로 진행을 멈출 때. 재개하면 라벨 제거 (handle과 함께 쓸 수 있음: handle=사람 조치 요청, hold=상태 표시) |
 | `feature` | PR | 에이전트 | 기능 추가 |
 | `fix` | PR | 에이전트 | 버그 수정 |
 | `docs` | PR | 에이전트 | 문서·스킬만 변경 |
@@ -25,13 +26,14 @@ fix|d73a4a|PR: 버그 수정
 docs|0075ca|PR: 문서/스킬 변경
 report|fbca04|사용자 요청에 따른 현황·상황 보고
 handle|b60205|사람의 조치 필요: 설정값(시크릿·환경변수·계정 설정) 입력, 외부 처리(인증·결제·외부 서비스 작업)
+hold|d4c5f9|보류: 진행을 멈춘 상태 (외부 의존, 사용자 결정, 다른 작업 완료 대기)
 EOF
 ```
 
 기본 라벨(bug, enhancement 등)을 지우려면:
 
 ```bash
-gh label list --json name -q '.[].name' | grep -vxE 'memo|plan|work|feature|fix|docs|report|handle' \
+gh label list --json name -q '.[].name' | grep -vxE 'memo|plan|work|feature|fix|docs|report|handle|hold' \
   | while IFS= read -r l; do gh label delete "$l" --yes; done
 ```
 

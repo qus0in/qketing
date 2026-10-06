@@ -32,6 +32,14 @@ docker build -t qketing:dev .                               # arm64 이미지
   기존 V 파일 수정·삭제 금지, 엔티티와 어긋나면 앱이 기동에 실패한다 (#12)
 - H2 결과로 PostgreSQL locking/pgvector/constraint를 검증하지 않는다 (#12)
 
+## 동시성·멱등·rollback 테스트 (0.3.0)
+
+- 위치: `src/test/java/kr/noco/qticket/app/booking/`
+- 실행: `./gradlew test --tests 'kr.noco.qticket.app.booking.*'`
+- 이 테스트들에는 `@Transactional`을 쓰지 않는다. 테스트 트랜잭션이 app service의
+  실제 transaction 경계·rollback을 가리기 때문이다 (#33)
+- 에이전트 보고 파일은 `tmp/agent-reports/`에 둔다 (`build/`는 clean으로 지워짐)
+
 ## E2E (Playwright)
 
 Playwright **Java**를 Gradle `e2eTest` source set으로 실행한다. Node/npm은 쓰지 않는다.
@@ -59,6 +67,7 @@ open build/reports/e2e        # 스크린샷 (실패 지점 포함), git 무관 
 
 ## 변경 이력
 
+- 2026-10-06: 동시성·멱등·rollback 테스트 위치와 @Transactional 금지 추가 (#33)
 - 2026-10-06: 최초 작성 (0.1.0 Bootstrap, #22)
 - 2026-10-06: E2E 실행 방법 추가 (#25)
 - 2026-10-06: 0.2.0 영속 기반 — bootTestRun(Testcontainers), Flyway migration 규칙 추가 (#27)

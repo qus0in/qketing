@@ -13,6 +13,7 @@
 - 이미지 태그 불일치 → 두 번 빌드함 → 동일 빌드/digest에 version과 SHA tag 부여.
 - milestone 종료 후 미완료 발견 → 이슈 수만 완료 기준으로 삼음 → 검증 기준·연기 기록 확인.
 - 버전 순서 역전 → 문자열 비교 사용 → major/minor/patch를 숫자로 비교.
+- `git show $sha:gradle.properties`가 `ambiguous argument`로 실패하고 버전 검증이 불일치로 중단 → zsh가 `$var:` 뒤 문자를 변수 수정자(`:g`, `:h`, `:t` 등)로 해석함 → `"${sha}:path"`처럼 중괄호로 감싼다. 릴리스 스크립트는 검증 실패 시 tag를 만들지 않게 해 두면 안전하다(실제로 tag 생성 전 중단됨).
 
 ## 부분 실패와 불변성
 

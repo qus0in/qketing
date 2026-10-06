@@ -51,6 +51,9 @@
   → 최고 순위 advice에서 `produces`로 HTML/JSON 분기. ProblemDetail 자동 handler(order 0)보다 앞서야 한다.
 - 브랜드 prefix가 API title에도 붙음 → 메시지 하나를 HTML `<title>`과 API에 공용 → 메시지는 순수 문구, prefix는 템플릿에서.
 - `package com.fasterxml.jackson.databind does not exist` → Boot 4는 Jackson 3 → `tools.jackson.databind` 사용.
+- context 로드 실패(no bean of type port) → 실제 adapter 없이 `@Service` 등록 → adapter 완성 후 재등록하고 각 지점에서 context 확인.
+- 컴파일 실패: 대상 Java 버전 밖 API(예: Java 21 `List.getFirst`) 사용 → 빌드 대상 버전 API만 사용.
+  JDK 없는 환경에서 작성했다면 실제 빌드·테스트로 확인한다.
 
 ## 회고와 보고
 
