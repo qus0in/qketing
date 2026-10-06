@@ -5,7 +5,8 @@
 1. 호스트 지원 범위·SSR/asset 구조·현재 작업 범위를 확인한다.
 2. var 없음, const 우선, let 재할당 근거, ES6+ 모듈·문법과 함수 책임을 검토한다.
 3. DOM 조회 제한, null 처리, 동적 항목 위임과 listener 중복/해제를 확인한다.
-4. flex/grid 선택, float 없음, position 허용·예외 근거와 8px scale을 점검한다.
+4. flex/grid 선택, float 없음, position 정책과 spacing·레이아웃 크기의 8px scale을 점검한다.
+   border 두께를 8px로 강제하지 않는다. 1px·2px 등 두께 선택의 주석/리뷰 근거를 확인한다.
 5. 타이포 예외가 spacing에 번지지 않았는지, template escaping과 서버 계약을 확인한다.
 6. JS 비활성·초기화 실패·부분 갱신·키보드·좁은 화면·zoom·긴 콘텐츠를 확인한다.
 7. 파일 100줄·메서드 가능한 16줄을 확인하고 결과·제한·다음 필요한 작업을 보고한다.
@@ -23,7 +24,7 @@ rg -n 'getElementById|getElementsBy[A-Za-z]*|document\.(forms|images|links)|\.cl
   "$frontend_root" -g '*.js' -g '*.mjs' -g '*.html'
 rg -n 'addEventListener|removeEventListener|on(click|submit|change)\s*=' "$frontend_root"
 rg -n 'position\s*:\s*(absolute|relative)|float\s*:' "$frontend_root"
-rg -n '(gap|margin|padding|border|width|height)[A-Za-z-]*\s*:|[0-9]+(\.[0-9]+)?px' \
+rg -n '(^|[;{[:space:]])((row-|column-)?gap|margin(-[a-z-]+)?|padding(-[a-z-]+)?|(min-|max-)?(width|height)|border(-[a-z]+)?-radius)[[:space:]]*:' \
   "$frontend_root" -g '*.css' -g '*.html'
 rg -n 'innerHTML|outerHTML|insertAdjacentHTML|th:utext|preventDefault' "$frontend_root"
 ```
@@ -38,7 +39,9 @@ grep -RnE 'getElementById|getElementsBy[A-Za-z]*|position:[[:space:]]*(absolute|
 - \b 지원 등 검색 엔진 차이를 고려한다. 주석·문자열·CSS var()도 후보에 포함될 수 있다.
 - ES6+를 쓴다는 사실만으로 let이 필요하지는 않다. 실제 재할당을 확인한다.
 - querySelector의 동적 문자열과 HTML 쓰기의 안전성을 별도로 확인한다.
-- pixel 검색만으로 scale을 자동 판정하지 않는다. token·shorthand·calc를 펼쳐 확인한다.
+- spacing 후보 검색은 속성 경계로 제한하고 border-width·outline 두께·타이포·모든 px 값을 함께 잡지 않는다.
+  한 줄에 여러 선언이 있으면 해당 spacing 선언만 판정한다. border/outline 두께는 별도 디자인 검토 대상이다.
+- 검색만으로 scale을 자동 판정하지 않는다. token·shorthand·calc를 펼쳐 확인한다.
 - 모든 CSS 크기를 강제하지 않고 타이포·비율·content size의 허용 범위를 구분한다.
 - position/float 검색에는 주석·vendor도 포함된다. 예외 이유와 국소 범위를 확인한다.
 - 검색 결과가 없다는 이유만으로 합격하지 않는다. 동적 코드·template 생성·다른 확장자도 확인한다.
@@ -52,6 +55,7 @@ grep -RnE 'getElementById|getElementsBy[A-Za-z]*|position:[[:space:]]*(absolute|
 - 좁은 화면/zoom에서 CTA가 가려짐 → fixed 영역이 본문을 덮음 → flow·여백·scroll 재검토.
 - root font 변경 시 spacing이 깨짐 → rem 환산 전제 불일치 → 8px 기준 token에 통일.
 - grep 후보가 과다함 → vendor/문자열도 검색 → 자작 코드와 후보 문맥 구분.
+- 1px border가 8px 위반으로 표시됨 → spacing과 선 두께를 같은 px 검색으로 판정 → 속성별 적용 범위를 구분하고 두께는 디자인 근거를 검토한다.
 
 ## 회고와 검증
 

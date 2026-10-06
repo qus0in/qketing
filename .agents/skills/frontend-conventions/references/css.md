@@ -29,10 +29,15 @@
 
 - 기준 scale은 0, 8, 16, 24, 32, 40, 48px처럼 8px 배수이다.
   음수 margin이 실제 필요하면 역시 8px 배수이며 근거를 남긴다.
-- gap/row-gap/column-gap, margin, padding, border-width, border-radius,
-  고정 width/height와 min/max 크기는 scale token을 사용한다.
-- border shorthand의 두께도 scale에 포함한다. 얇은 1px border를 임의 예외로 두지 않는다.
-  얇은 구분선이 실제 필요하면 호스트의 명시적 예외 정책과 근거를 확인한다.
+- 적용 대상: gap/row-gap/column-gap, margin·padding(방향별 속성 포함),
+  고정 레이아웃 width/height·min/max 크기는 scale token을 사용한다.
+  border-radius의 기존 scale token 규칙은 유지한다.
+- 비대상: border-width(방향별 두께·border shorthand의 두께 포함), outline 두께,
+  font-size·line-height·letter-spacing 등 타이포는 8px 배수를 강제하지 않는다.
+- border 두께는 1px·2px 등 디자인 판단을 허용한다. 구분선·상태 강조·대비 등 선택 근거를
+  코드 주석이나 리뷰에 남긴다. 얇은 border 사용에 별도 spacing 예외 승인을 요구하지 않는다.
+- outline 두께는 focus 식별과 대비를 기준으로 정한다. border·outline의 두께 선택이
+  주변 margin/padding이나 버튼·클릭 영역의 spacing 규칙을 면제하지 않는다.
 - auto·비율·fr·%·콘텐츠 기반 크기는 반응형 관계를 표현할 때 사용한다.
   calc/clamp 안의 고정 spacing/크기 항은 scale을 따르고 임의 pixel 값을 숨기지 않는다.
 - 고정 root font 크기를 가정한 rem spacing은 사용하지 않는다.
