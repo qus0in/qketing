@@ -28,6 +28,11 @@
 `memo`(사람 전용), `plan`, `work`, `report`, `handle`(이슈), `feature`, `fix`, `docs`(PR).
 의미는 `github-workflow/references/labels.md` 참고.
 
+## 승인 요청 형식 (2026-10-06 사용자 지시)
+
+- 핵심 사항은 최대 3가지. 각 항목은 스크린샷 또는 mermaid / md table로 표현
+- handle 이슈 본문, 채팅 보고, Discord(hermes) 회신 모두 적용. 승인 요청이 필요하면 handle 이슈를 만든다
+
 ## Milestone
 
 - SemVer 버전별 milestone 13개 (`0.1.0 — Bootstrap` ~ `1.0.0 — First Stable`). 목록과 범위는 `docs/roadmap.md`

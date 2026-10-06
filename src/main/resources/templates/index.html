@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/base :: layout(~{::title}, ~{::main})}">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="#{app.name} + ' · ' + (${pageTitle} ?: #{home.title})">QTicket</title>
+</head>
+<body>
+  <main id="main" class="container">
+    <h1 th:text="#{home.heading}">QTicket</h1>
+    <p th:text="#{home.intro}">분산 티켓팅 시뮬레이션 QTicket입니다.</p>
+  </main>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout(titleTag, content)">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:replace="${titleTag}">QTicket</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --color-bg: #fff;
+      --color-text: #111;
+      --color-muted: #333;
+      --color-border: #111;
+      --color-border-muted: #555;
+      --color-link: #1a1a1a;
+      --color-link-hover: #000;
+      --color-focus: #000;
+      --color-button-bg: #333;
+      --color-button-bg-hover: #1a1a1a;
+      --color-button-text: #fff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--color-text);
+      background: var(--color-bg);
+      font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    }
+    a { color: var(--color-link); text-decoration: underline; }
+    a:hover { color: var(--color-link-hover); }
+    a:focus-visible, button:focus-visible {
+      outline: 3px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+    .skip-link {
+      position: fixed;
+      left: -9999px;
+      top: 0;
+      background: var(--color-bg);
+      padding: 8px 16px;
+    }
+    .skip-link:focus { left: 0; z-index: 10; }
+    .site-header, .site-footer { padding: 16px 24px; }
+    .site-header { border-bottom: 8px solid var(--color-border); }
+    .site-footer {
+      border-top: 8px solid var(--color-border-muted);
+      margin-top: 48px;
+      color: var(--color-muted);
+    }
+    .brand {
+      display: inline-block;
+      min-height: 48px;
+      line-height: 48px;
+      font-size: 22px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .container { max-width: 960px; margin: 0 auto; padding: 32px 24px; }
+    .button {
+      display: inline-block;
+      min-height: 48px;
+      padding: 8px 24px;
+      background: var(--color-button-bg);
+      color: var(--color-button-text);
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .button:hover {
+      background: var(--color-button-bg-hover);
+      color: var(--color-button-text);
+    }
+    .error-status { margin: 0; font-size: 48px; font-weight: 700; }
+    .error-request { word-break: break-all; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main" th:text="#{a11y.skip}">본문으로 건너뛰기</a>
+  <header class="site-header" th:replace="~{fragments/header :: header}"></header>
+  <main id="main" th:replace="${content}">
+    <p th:text="#{error.contentFallback}">내용을 불러오지 못했습니다.</p>
+  </main>
+  <footer class="site-footer" th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

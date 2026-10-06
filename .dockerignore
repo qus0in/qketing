@@ -1,0 +1,37 @@
+# VCS
+.git
+.gitignore
+
+# Gradle / 빌드 산출물
+.gradle
+build
+**/build
+out
+
+# 에이전트/문서/CI (image에는 불필요)
+.agents
+.claude
+.github
+docs
+*.md
+AGENTS.md
+CLAUDE.md
+README.md
+
+# IDE / OS
+.idea
+.vscode
+*.iml
+.DS_Store
+
+# 로컬 secret/설정 (image에 넣지 않음)
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.jks
+
+# Docker 자체
+Dockerfile
+.dockerignore
