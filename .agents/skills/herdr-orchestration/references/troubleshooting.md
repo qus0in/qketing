@@ -11,7 +11,7 @@
 - `jq: parse error` (pane read, agent read) → read 계열 명령은 JSON이 아니라 일반 텍스트를 반환
   → jq 없이 텍스트로 처리한다. 다른 대부분의 명령은 JSON을 반환한다
 - discover 결과의 workspace가 다르거나 자기 자신이 worker로 나옴 → pane이 workspace 사이에서 이동해 `HERDR_*` 환경변수가 예전 값임
-  → `herdr pane current --current`로 현재 pane과 workspace를 조회한다
+  → `herdr pane current --current`로 조회하되, agent 종류·cwd·현재 대화 제목을 `agent list`와 대조한다. 불일치하면 반환된 pane을 rename하거나 worker에서 제외하지 않는다. 본인임이 확인된 ID만 사용하고, 식별이 모호하면 변경을 보류한다.
 - pane list의 `name`이 null → 에이전트 이름은 `agent list`에만 있음
   → `agent list`를 pane_id 기준으로 합친다
 - Codex worker가 herdr, 네트워크, git 쓰기 작업에서 BLOCKED → Codex 샌드박스가 소켓이나 쓰기를 차단
