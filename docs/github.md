@@ -25,7 +25,7 @@
 
 ## 라벨
 
-`memo`(사람 전용), `plan`, `work`, `report`, `handle`(이슈), `feature`, `fix`, `docs`(PR).
+`memo`(사람 전용), `plan`, `work`, `report`, `handle`, `hold`(보류 상태)(이슈), `feature`, `fix`, `docs`(PR).
 의미는 `github-workflow/references/labels.md` 참고.
 
 ## 승인 요청 형식 (2026-10-06 사용자 지시)
@@ -46,3 +46,4 @@
 - 2026-10-06: `handle` 라벨 추가 (설정값 입력, 외부 처리 등 사람의 조치가 필요할 때)
 - 2026-10-06: SemVer milestone 13개 생성 (#18)
 - 2026-10-06: 문서 전용 변경은 CI skip (`changes` job + job 조건)
+- 2026-10-06: `hold` 라벨 추가 (#d4c5f9, 보류 상태 표시)
