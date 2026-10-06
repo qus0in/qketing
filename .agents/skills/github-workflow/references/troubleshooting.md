@@ -22,3 +22,5 @@
   → 잠시 후 `gh pr view <n> --json state,mergedAt`로 재확인. 실패로 판단하지 않는다
 - 같은 커밋에 CI가 두 번 실행 → workflow에 `push: [dev]`와 `pull_request: [main]` 트리거가 모두 있음
   → 정상 동작. 줄이려면 push 트리거 제거 (PR 전 조기 피드백은 잃음)
+- 문서만 바꾼 PR이 `Expected — Waiting for status`에서 멈춤 → workflow `paths`/`paths-ignore`로 건너뛰면 필수 체크가 보고되지 않음
+  → workflow는 항상 실행하고, 변경 파일 판별 job의 출력으로 필수 job에 `if:`를 건다. 조건으로 skip된 job은 통과로 처리된다

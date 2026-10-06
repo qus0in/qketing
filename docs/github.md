@@ -18,6 +18,10 @@
 - `.agents/skills/*` 전체를 `skill-authoring/scripts/validate.sh`로 검증 (최대 100줄)
 - 추적되는 모든 파일 100줄 이하 (AGENTS.md 규칙), 심볼릭 링크 제외
 - 트리거: `dev` push(조기 피드백) + `main` 대상 PR. 그래서 한 커밋에 두 번 실행된다
+- 문서만 변경(`docs/`, `.agents/`, `.claude/`, `*.md`)되면 `changes` job이 판별해 `ci` job을 skip한다.
+  skip된 job은 필수 체크를 통과로 처리한다
+- CI에서만 빼는 것이다. 커밋 전 로컬 검증은 문서·스킬을 **포함해** 그대로 실행한다
+  (모든 스킬 `validate.sh <dir> 100`, 추적 파일 전체 100줄 검사)
 
 ## 라벨
 
@@ -36,3 +40,4 @@
 - 2026-10-05: `.claude/skills` 심볼릭 링크를 절대경로 → 상대경로(`../.agents/skills`)로 변경
 - 2026-10-06: `handle` 라벨 추가 (설정값 입력, 외부 처리 등 사람의 조치가 필요할 때)
 - 2026-10-06: SemVer milestone 13개 생성 (#18)
+- 2026-10-06: 문서 전용 변경은 CI skip (`changes` job + job 조건)
