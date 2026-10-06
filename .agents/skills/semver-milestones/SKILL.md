@@ -3,7 +3,7 @@ name: semver-milestones
 description: GitHub milestone으로 SemVer 로드맵을 운영하고 SNAPSHOT 개발 버전을 release tag와 GitHub Release로 승격한다. 버전 계획·milestone 생성과 이슈 연결·릴리스 준비에서 사용한다. "SemVer", "milestone", "SNAPSHOT", "버전 승격", "release tag" 같은 요청에 사용.
 compatibility: 명령 예시는 git, 인증된 gh CLI, bash를 사용하며 빌드 도구는 호스트 설정을 따른다.
 metadata:
-  version: "1.0"
+  version: "1.1"
 ---
 
 # SemVer와 milestone 운영
