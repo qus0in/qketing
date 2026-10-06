@@ -46,3 +46,6 @@
   - codex-1(Sol): 리뷰 2회, 실제 결함(CI 줄 수 검사에 wrapper 걸림, 405 Allow 누락, advice 순서) 지적. 서브 헤드로 적합
   - opencode-1: 템플릿·색상 수정, 범위 밖 404 JSON 문제를 먼저 발견. opencode-2: Dockerfile 한 번에 통과
   - 충돌: opencode-1이 메시지에 접두사를 넣자 codex-2 테스트 실패 → 공유 파일 의미까지 계약에 적기
+- 2026-10-06 0.1.0 릴리스 (#23 #26, tag v0.1.0). macOS uptime 50일 TCP 버그로 재부팅 → herdr 재시작, codex pane 부재
+  - opencode-1이 재시작 후 `/tmp` 권한 요청으로 blocked → 0.2.0 이슈(#27 #28)는 orchestrator가 직접 작성
+  - hermes(Discord) 요청은 사람 지시로 처리. 승인 요청은 핵심 3개 + 표/mermaid
