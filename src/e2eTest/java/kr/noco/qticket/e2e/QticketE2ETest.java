@@ -14,7 +14,10 @@ import com.microsoft.playwright.options.RequestOptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import kr.noco.qticket.TestcontainersConfiguration;
 
+@Import(TestcontainersConfiguration.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(PlaywrightExtension.class)
 class QticketE2ETest extends E2ETestSupport {

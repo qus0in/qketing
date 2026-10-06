@@ -7,19 +7,30 @@
   export JAVA_HOME=$(echo ~/.jdks/jdk-17*/Contents/Home)
   ```
 - Gradle은 설치하지 않는다. `./gradlew` (9.8.0, `distributionSha256Sum` 고정)만 사용한다
-- Docker: arm64 엔진
+- Docker: arm64 엔진. 0.2.0부터 테스트·E2E·로컬 실행이 **Testcontainers PostgreSQL**(`pgvector/pgvector:pg17`)을
+  자동 기동하므로 Docker 데몬이 떠 있어야 한다 (#27)
 
 ## 명령
 
 ```bash
-./gradlew build                                        # compile + test + bootJar
-./gradlew bootRun --args='--server.address=127.0.0.1'  # local profile, http://127.0.0.1:8080
-./gradlew processResources                             # 실행 중 템플릿 변경 반영 (devtools 재시작)
-docker build -t qketing:dev .                          # arm64 이미지
+./gradlew build                                             # compile + test + bootJar
+./gradlew bootTestRun --args='--server.address=127.0.0.1'   # local profile + PostgreSQL 컨테이너, http://127.0.0.1:8080
+./gradlew processResources                                  # 실행 중 템플릿 변경 반영 (devtools 재시작)
+docker build -t qketing:dev .                               # arm64 이미지
 ```
 
+- `bootRun`은 이제 JPA가 `ddl-auto=validate`로 DB를 요구하므로 로컬에서 단독 실행하지 않는다.
+  로컬 실행은 `bootTestRun`을 쓴다 (`TestQticketApplication`이 `TestcontainersConfiguration`을 함께 로드)
+- `bootRun`/운영은 `SPRING_DATASOURCE_*` 등 env로 실제 PostgreSQL 접속 정보를 주입한다
 - 기본 profile은 `local` (Thymeleaf cache off, devtools 포함). 운영은 `SPRING_PROFILES_ACTIVE=prod`
 - actuator는 `health`만 노출한다
+
+## 영속 (Flyway / JPA)
+
+- schema는 Flyway만 관리한다. migration 위치는 `src/main/resources/db/migration`
+- `ddl-auto=validate`이므로 entity를 바꾸면 schema 변경은 **새 `V<N>__*.sql` 파일로만** 추가한다.
+  기존 V 파일 수정·삭제 금지, 엔티티와 어긋나면 앱이 기동에 실패한다 (#12)
+- H2 결과로 PostgreSQL locking/pgvector/constraint를 검증하지 않는다 (#12)
 
 ## E2E (Playwright)
 
@@ -27,12 +38,14 @@ Playwright **Java**를 Gradle `e2eTest` source set으로 실행한다. Node/npm�
 
 ```bash
 ./gradlew playwrightInstall   # 로컬 Chromium: ~/Library/Caches/ms-playwright (최초 1회)
-./gradlew e2eTest             # @SpringBootTest random port로 앱을 직접 띄우고 종료
+./gradlew e2eTest             # @SpringBootTest random port + Testcontainers PostgreSQL
 open build/reports/e2e        # 스크린샷 (실패 지점 포함), git 무관 경로
 ```
 
 - `check`/`build`에는 포함하지 않는다. 실행 중인 `qketing-serve` 컨테이너(hermes 화면 체크용)와 무관하다
-- CI: `e2e.yml`(수동)에서 `playwrightInstall -Pwith-deps`로 runner에 OS 의존성과 함께 설치, artifact `e2e-report`
+- 테스트·E2E 모두 Docker(Testcontainers)가 필요하다. Docker가 꺼져 있으면 컨테이너 기동 단계에서 실패한다
+- CI: `ci.yml` build는 runner Docker로, `e2e.yml`(수동)은 `playwrightInstall -Pwith-deps`로
+  OS 의존성과 함께 설치하고 artifact `e2e-report`를 남긴다
 
 ## 트러블슈팅
 
@@ -48,3 +61,4 @@ open build/reports/e2e        # 스크린샷 (실패 지점 포함), git 무관 
 
 - 2026-10-06: 최초 작성 (0.1.0 Bootstrap, #22)
 - 2026-10-06: E2E 실행 방법 추가 (#25)
+- 2026-10-06: 0.2.0 영속 기반 — bootTestRun(Testcontainers), Flyway migration 규칙 추가 (#27)

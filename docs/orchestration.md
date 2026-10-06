@@ -7,15 +7,33 @@
 | 이름 | pane | 에이전트 | 모델 · effort | 티어 | 주 업무 |
 | - | - | - | - | - | - |
 | `orchestrator` | wW:p1 | Claude Code | Opus 5.5 | - | 분해, 배정, 검증, git, 보고 |
-| `codex-1` | wW:p2 | Codex 0.160 | GPT-6.1-Sol · medium | 상+ (서브 헤드) | 코드 리뷰, 설계 판단, 하위 작업 분해·검수 |
-| `codex-2` | wW:p5 | Codex | GPT-6-Luna · high | 상 | 설계가 걸린 구현, 디버깅 |
+| `codex-1` | wW:p2 | Codex 0.160 | GPT-6.1-Sol · medium | 상+ (서브 헤드) | 코드 리뷰, 설계 판단, 하위 작업 분해·검수, 실행성 작업 위임의 기본 대상 |
+| `codex-2` | wW:p5 | Codex | GPT-6-Luna · high | 상 (주 구현) | 설계가 걸린 구현, 디버깅 |
 | `opencode-1` | wW:p3 | OpenCode 1.18 | DeepSeek V4.1 Flash · max | 중 | 명세가 분명한 구현, 테스트, 문서 정합성 점검 |
 | `opencode-2` | wW:p4 | OpenCode 1.18 | MiMo-V2.6-Flash Free (effort 표시 없음) | 하 | 요약, 사실 조회, 단순 수정 |
+| `agy-1` | wW:p6 | Antigravity | Sonnet 5.5 · medium | 중 | 조사·요약, 문서 정합성, 리뷰 보조. 사용량을 고려해 가끔만 사용 |
 
 - 이름은 에이전트가 재시작되면 해제된다. 세션을 시작할 때 `discover-workers.sh`로 확인하고 다시 붙인다.
 - 모델이 바뀌면 이 표를 갱신한다.
 - 2026-10-06 사용자 지시: Sol(codex-1)은 직접 구현보다 리뷰·서브 헤드로 쓰고, 주 구현은 Luna(codex-2)가 맡는다.
   서브 헤드는 맡은 영역의 하위 작업을 나누고 결과를 검수하지만, git과 최종 머지 판단은 orchestrator가 한다
+- 2026-10-06 사용자 지시: orchestrator는 직접 하기 전에 Sol에게 위임하는 것이 기본값이다.
+  codex 샌드박스에는 Java/Gradle이 없으므로 빌드·테스트는 orchestrator가 한다
+
+## worker 호출
+
+- 호출은 `.agents/skills/herdr-orchestration/scripts/herdr-call.sh`로만 한다 (`status`/`resolve`/`send`/`wait`/`read`).
+- 에이전트 이름에 의존하지 않고 tab 라벨 또는 tab/pane id를 쓴다.
+- tab과 pane 번호가 다를 수 있으니 `resolve`로 확인한다.
+
+| tab 라벨 | 이름 | tab/pane |
+| - | - | - |
+| `cc` | orchestrator | wW:t1/p1 |
+| `cdx1` | codex-1 (Sol) | wW:t2/p2 |
+| `cdx2` | codex-2 (Luna) | wW:t5/p5 |
+| `oc1` | opencode-1 | wW:t3/p3 |
+| `oc2` | opencode-2 | wW:t4/p4 |
+| `agy` | agy-1 | wW:t6/p6 |
 
 ## 이 레포 규칙과의 연결 (AGENTS.md)
 
@@ -49,3 +67,5 @@
 - 2026-10-06 0.1.0 릴리스 (#23 #26, tag v0.1.0). macOS uptime 50일 TCP 버그로 재부팅 → herdr 재시작, codex pane 부재
   - opencode-1이 재시작 후 `/tmp` 권한 요청으로 blocked → 0.2.0 이슈(#27 #28)는 orchestrator가 직접 작성
   - hermes(Discord) 요청은 사람 지시로 처리. 승인 요청은 핵심 3개 + 표/mermaid
+- 2026-10-06 0.2.0 착수 (#27): opencode-2가 migration을 실제 PG로 자가 검증, codex-2 entity·QueryDSL allow-list, Sol 검수
+- 2026-10-06 codex-2 이름 3회 유실, 이름으로 보낸 T27-9 유실 → herdr-call 도입 (Sol 작성, orchestrator 실소켓 검증에서 `--` 미지원 버그 발견·수정)

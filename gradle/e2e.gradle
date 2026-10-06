@@ -1,6 +1,9 @@
 sourceSets {
     e2eTest {
         java.srcDir 'src/e2eTest/java'
+        // 테스트 공용 Testcontainers 설정 재사용
+        compileClasspath += sourceSets.test.output
+        runtimeClasspath += sourceSets.test.output
         compileClasspath += sourceSets.main.output
         runtimeClasspath += sourceSets.main.output
     }

@@ -1,9 +1,9 @@
 ---
 name: herdr-usage
 description: Herdr(AI 코딩 에이전트용 터미널 워크스페이스 매니저) 활용법. 사람에게 설치·개념·마우스/키보드 사용·설정·진단을 안내하거나, herdr pane 안(HERDR_ENV=1)에서 에이전트가 pane 분할, 명령 실행, 출력 읽기, 다른 에이전트 시작·프롬프트·대기를 할 때 사용. "herdr", "pane", "workspace", "다른 에이전트에게 맡겨", "병렬 에이전트" 같은 요청에 사용.
-compatibility: Requires the herdr CLI (macOS, Linux, Windows)
+compatibility: Requires herdr CLI; workspace scripts require bash, jq and HERDR_ENV=1
 metadata:
-  version: "1.0"
+  version: "1.1"
   herdr-version-checked: "0.9.3"
 ---
 
@@ -23,6 +23,7 @@ test "${HERDR_ENV:-}" = 1 && echo inside || echo outside
 | - | - |
 | 사람이 설치·사용법·문제를 물음 | [references/human-guide.md](references/human-guide.md) |
 | pane 안에서 herdr를 직접 제어해야 함 | [references/agent-control.md](references/agent-control.md) |
+| workspace 저장·복구 | [references/workspace-restore.md](references/workspace-restore.md) |
 | 감지 오류·키 미동작·시작 문제 | [references/troubleshooting.md](references/troubleshooting.md) |
 
 - `HERDR_ENV=1`이면 사람은 이미 attach된 상태다. pane 안에서 `herdr`를 실행하라고 안내하지 않는다 (중첩 실행은 차단된다).
@@ -63,3 +64,14 @@ ID 형식: workspace `w1`, tab `w1:t1`, pane `w1:p1`. 불투명한 값이므로 
 - 자신이 만들지 않은 workspace, tab, pane, session은 닫지 않는다.
 - 활성 세션에서 `herdr server stop`을 실행하지 않는다 (모든 pane 프로세스가 종료된다).
 - 공식 스킬 설치(`npx skills add herdrdev/herdr --skill herdr -g`)나 사용자 설정 파일 수정은 먼저 묻는다.
+
+## 4. Workspace 저장·복구
+
+- [scripts/ws-save.sh](scripts/ws-save.sh)로 workspace/tab 라벨·pane cwd·agent kind/이름을 JSON에 저장한다.
+- 기본 경로는 `${HERDR_MANIFEST:-$HOME/.config/herdr/workspace-layout.json}`이다.
+- [scripts/ws-restore.sh](scripts/ws-restore.sh)는 기본 dry-run으로 차이를 출력한다. 검토 후 `--apply`로 복구한다.
+- Herdr의 `~/.config/herdr/session.json`은 topology를 복원하지만 에이전트 이름은 복원하지 않는다.
+- 복구는 부족한 구성 생성·agent start·rename이다. 기존 pane을 종료·재시작하거나 이름을 임의 생성하지 않는다.
+- tab ID → pane ID는 조회로만 연결한다. 서로의 번호를 문자열 치환하지 않는다.
+- worker 호출은 형제 스킬 herdr-orchestration의 `scripts/herdr-call.sh`를 tab/pane ID로 사용한다.
+- 분할 방향·비율·대화 세션·실행 인자는 이 매니페스트의 저장 범위가 아니다. 상세 절차와 충돌 처리는 위 reference를 따른다.

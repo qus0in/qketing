@@ -3,7 +3,7 @@ name: herdr-orchestration
 description: herdr 안에서 한 pane의 에이전트를 Orchestrator로, 같은 workspace의 다른 에이전트 pane들을 Workers로 두고 업무를 분해·배분·검증한다. 각 worker의 모델과 effort를 화면에서 판별해 난이도별로 배정하고, 사람의 직접 채팅과 외부 에이전트(hermes 등)의 herdr CLI 호출을 모두 받는다. "오케스트레이션", "worker에게 맡겨", "병렬로 나눠", "패널 배분", 외부 에이전트 요청 처리에 사용.
 compatibility: Requires herdr CLI (HERDR_ENV=1), jq, bash
 metadata:
-  version: "1.0"
+  version: "1.1"
   herdr-version-checked: "0.9.3"
 ---
 
@@ -14,6 +14,7 @@ herdr CLI 기본 사용법은 herdr-usage 스킬, 상세 규칙은 아래 refere
 - [references/routing.md](references/routing.md): 티어 판별, 업무 배정, 동시 실행, 재배정
 - [references/protocol.md](references/protocol.md): 이름 규칙, 위임 프롬프트, 보고 형식, 외부 호출 규약
 - [references/troubleshooting.md](references/troubleshooting.md)
+- [scripts/herdr-call.sh](scripts/herdr-call.sh): worker 조회·식별자 해석·전송·대기·출력
 
 ## 역할
 
@@ -32,6 +33,10 @@ herdr agent rename <pane_id> orchestrator         # 자기 자신
 herdr agent rename <pane_id> <kind>-<n>           # 이름이 없는 worker
 ```
 
+worker 호출은 `bash <this-skill>/scripts/herdr-call.sh`로만 수행하고 **tab ID 또는 pane ID**를 사용한다.
+이름은 표시용이며 재시작·세션 교체 시 해제되므로 호출에 의존하지 않는다.
+ID는 `status`/`resolve` 조회 결과에서 읽고 tab 번호를 pane 번호로 치환하지 않는다.
+
 `model_hint`로 각 worker의 티어(상/중/하)를 정한다 (routing.md §1). 확신이 없으면 읽기 전용 소작업으로 확인한다.
 
 ### 2. 요청 접수
@@ -48,7 +53,8 @@ herdr agent rename <pane_id> <kind>-<n>           # 이름이 없는 worker
 
 ### 4. 실행과 대기
 
-- `--wait` 없이 여러 worker에게 보내고, 각각 `agent wait`로 기다린다 (protocol.md 병렬 실행).
+- 스크립트 `send`로 여러 worker에게 보내고, 각각 `wait`로 기다린다 (protocol.md 병렬 실행).
+- 전송·대기의 exit code와 응답을 확인한다. 실패 응답을 완료로 취급하거나 자동 재전송하지 않는다.
 - 기다리는 동안 Orchestrator는 통합 준비나 다른 조각을 처리한다. 오래 걸리면 사람에게 진척을 알린다.
 
 ### 5. 검증과 통합
@@ -67,6 +73,6 @@ herdr agent rename <pane_id> <kind>-<n>           # 이름이 없는 worker
 ## 안전 규칙
 
 - worker가 `blocked`(승인 대기)면 화면을 확인하고 사람에게 묻는다. Orchestrator가 대신 승인하지 않는다.
-- timeout이나 stalled는 전달 실패의 증거가 아니다. 다시 보내기 전에 `agent read`로 확인한다.
+- timeout이나 stalled는 전달 실패의 증거가 아니다. 다시 보내기 전에 스크립트 `status`/`read`로 확인한다.
 - worker pane을 닫거나 재시작하거나 모델을 바꾸지 않는다. 사람의 판단이 필요하다.
 - 외부 호출도 사람 요청과 같은 안전 규칙을 따른다. 되돌리기 어려운 작업은 `RESULT: BLOCKED`로 응답한다.
