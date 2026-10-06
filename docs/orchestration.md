@@ -2,20 +2,20 @@
 
 방법은 `.agents/skills/herdr-orchestration` 스킬을 따른다. 여기에는 이 레포의 현재 구성과 운영 기록만 남긴다.
 
-## 현재 구성 (2026-10-06 16:00 최종 실측, workspace `wW`)
+## 현재 구성 (2026-10-06 재배정 3회 후 실측, workspace `wW`)
 
-| 탭 라벨 | tab | pane | 에이전트 | 모델 · effort | 역할 |
+| 탭 라벨 | tab | pane | 에이전트 | 모델·effort(화면 표기) | 티어·역할 |
 | - | - | - | - | - | - |
 | orchestrator | wW:t1 | wW:p1 | Claude Code | Opus 5.5 | 분해·배정·빌드 검증·통합·git·최종 리뷰 |
-| worker1 | wW:t6 | wW:p6 | OpenCode | Space Bunny Free · OpenCode Zen · max | 주 구현·테스트 |
-| worker2 | wW:t5 | wW:p5 | OpenCode | Muse Spark 1.3 Contributor · OpenCode Go (effort 표시 없음) | 요약·정리·단순 수정 |
-| worker3 | wW:t3 | wW:p3 | OpenCode | DeepSeek V4.1 Flash · Ollama Cloud · max | 주 구현·테스트·문서 |
-| worker4 | wW:t4 | wW:p4 | OpenCode | MiMo-V2.6-Flash · Free · OpenCode Zen (effort 표시 없음) | 요약·사실 조회·단순 수정 |
+| worker1 | wW:t6 | wW:p6 | OpenCode | MiMo-V2.6-Flash · OpenCode Go (effort 표시 없음) | 하: 요약·정리·단순 수정 |
+| worker2 | wW:t5 | wW:p5 | OpenCode | Muse Spark 1.3 Contributor · OpenCode Go (effort 표시 없음) | 하: 요약·정리·단순 수정 |
+| worker3 | wW:t3 | wW:p3 | OpenCode | GPT-6 Luna · OpenCode Go · max | 상: 주 구현, worker 산출물 교차 리뷰 |
+| worker4 | wW:t4 | wW:p4 | OpenCode | LongCat 2.5 Preview Free · OpenCode Go · high | 중: 명확한 구현·테스트·문서 |
 
-- 근거: 2026-10-06 사용자 재배정(2회), hermes 16:00 실측
-- 워커 4개 모두 OpenCode, 이름 없음 → 지목은 탭 라벨/tab id만 (다른 workspace에 같은 라벨이 있으면 tab id)
-- 티어: max 2개(worker1, worker3) = 주 구현, effort 미표시 2개(worker2, worker4) = 요약·정리·단순 수정
-- 리뷰: 최종은 orchestrator, worker 산출물 교차 리뷰는 max 2개끼리
+- 근거: 2026-10-06 orchestrator 화면 실측 (사용자 요청)
+- 워커 4개 모두 OpenCode, 이름 없음 → 지목은 탭 라벨(herdr-call이 현재 workspace 우선 해석, 다른 workspace wX에도 worker1·2 라벨 있음)
+- 티어: 상 1개(worker3) = 주 구현, 중 1개(worker4) = 명확한 구현·테스트·문서, 하 2개(worker1, worker2) = 요약·정리·단순 수정
+- 리뷰: 최종은 orchestrator, worker 산출물 교차 리뷰는 worker3(상)
 - 호출은 `herdr-call.sh`로 탭 라벨(worker1~4) 또는 tab id 사용, 이름 의존 금지
 - 이름은 에이전트가 재시작되면 해제된다. 세션을 시작할 때 `discover-workers.sh`로 확인하고 다시 붙인다.
 - 모델이 바뀌면 이 표를 갱신한다.
@@ -76,3 +76,4 @@
 - worker3이 다른 보고서의 'T40-10 제안'을 따라 범위 밖 hold·확정 연동 구현 → #11 설계와 일치해 유지, 대신 adapter 수준 DB 경합 테스트 추가
 - 동시 Gradle 실행으로 test-results 충돌, worker1 130줄 파일 → 재지시. 다른 workspace(wX)와 탭 라벨 중복 → herdr-call이 현재 workspace 우선 해석
 - 최종 리뷰(orchestrator): Valkey 키 외부 식별자 검증 추가, session 키 문서 정정
+- 2026-10-06 재배정(3회): worker1 Space Bunny→MiMo Flash, worker3 DeepSeek→GPT-6 Luna max, worker4 MiMo→LongCat high
