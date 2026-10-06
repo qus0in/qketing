@@ -1,6 +1,5 @@
 package kr.noco.qticket.infra.persistence.booking;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import kr.noco.qticket.app.booking.BookingPersistencePort;
@@ -9,6 +8,8 @@ import kr.noco.qticket.app.error.ErrorCode;
 import kr.noco.qticket.domain.booking.Booking;
 import kr.noco.qticket.domain.booking.BookingClaim;
 import kr.noco.qticket.domain.booking.Ticket;
+import org.postgresql.util.PSQLException;
+import org.postgresql.util.ServerErrorMessage;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -82,14 +83,14 @@ public class BookingPersistenceAdapter implements BookingPersistencePort {
     }
 
     private boolean isBookingSeatViolation(Throwable cause) {
-        while (cause != null && !(cause instanceof SQLException)) {
+        while (cause != null && !(cause instanceof PSQLException)) {
             cause = cause.getCause();
         }
-        if (!(cause instanceof SQLException sqlException)) {
+        if (!(cause instanceof PSQLException psql)) {
             return false;
         }
-        return "23503".equals(sqlException.getSQLState()) && sqlException.getMessage() != null
-                && sqlException.getMessage().contains("fk_booking_seat");
+        ServerErrorMessage error = psql.getServerErrorMessage();
+        return error != null && "23503".equals(psql.getSQLState()) && "fk_booking_seat".equals(error.getConstraint());
     }
 
     private Ticket toDomain(TicketEntity entity) {

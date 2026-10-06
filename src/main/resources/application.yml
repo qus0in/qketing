@@ -20,3 +20,16 @@ management:
     web:
       exposure:
         include: health
+
+# Valkey 기반 설정 기본값 (서비스 기능별 TTL·용량은 환경에서 재정의 가능)
+qticket:
+  valkey:
+    queue:
+      capacity: 100
+    session:
+      ttl: 5m
+    hold:
+      ttl: 5m
+  cache:
+    # 공연 메타데이터 read cache TTL (좌석 판매 상태·booking은 캐시하지 않음)
+    performance-ttl: 5m

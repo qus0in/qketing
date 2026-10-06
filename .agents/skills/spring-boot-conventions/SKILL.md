@@ -2,7 +2,7 @@
 name: spring-boot-conventions
 description: Spring Boot MVC의 ui/app/domain/infra 레이어, 트랜잭션, 예외, DTO와 설정 컨벤션을 적용하고 검토한다. Spring MVC 구현·리팩터링·코드 리뷰에서 사용한다. "레이어 의존 방향", "트랜잭션 경계", "ProblemDetail", "record DTO", "ConfigurationProperties" 같은 요청에 사용.
 metadata:
-  version: "1.2"
+  version: "1.3"
 ---
 
 # Spring Boot 컨벤션

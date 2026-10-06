@@ -73,6 +73,10 @@
 - transaction은 app service public 메서드만. `@Service`는 실제 adapter 완성 후 등록
 - 후속: #37 (mid 1, low 3)
 
+## Valkey 구조 (0.4.0, #40 #41)
+
+- 상세: docs/valkey.md
+
 ## 구현 직전 사용자 확인 필요
 
 - AI model id, embedding model, RAG/memory 구조 (#13)
@@ -80,6 +84,7 @@
 
 ## 변경 이력
 
+- 2026-10-06: Valkey 구조 추가 (#40 #41)
 - 2026-10-06: 티켓팅 확정 구조 추가 (#33)
 - 2026-10-06: 영속 구조 추가 (#27)
 - 2026-10-06: 패키지 kr.noco, 코딩 규칙, Playwright Java E2E 도입 (#25)
