@@ -50,6 +50,7 @@
 - 브라우저 404가 JSON으로 나옴 → controller 밖 오류(no handler, 405)는 패키지 한정 advice가 못 잡음
   → 최고 순위 advice에서 `produces`로 HTML/JSON 분기. ProblemDetail 자동 handler(order 0)보다 앞서야 한다.
 - 브랜드 prefix가 API title에도 붙음 → 메시지 하나를 HTML `<title>`과 API에 공용 → 메시지는 순수 문구, prefix는 템플릿에서.
+- `package com.fasterxml.jackson.databind does not exist` → Boot 4는 Jackson 3 → `tools.jackson.databind` 사용.
 
 ## 회고와 보고
 
