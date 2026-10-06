@@ -46,9 +46,10 @@
     }
     .skip-link:focus { left: 0; z-index: 10; }
     .site-header, .site-footer { padding: 16px 24px; }
-    .site-header { border-bottom: 8px solid var(--color-border); }
+    /* Border thickness is a visual detail, not part of the 8px spacing scale. */
+    .site-header { border-bottom: 2px solid var(--color-border); }
     .site-footer {
-      border-top: 8px solid var(--color-border-muted);
+      border-top: 1px solid var(--color-border-muted);
       margin-top: 48px;
       color: var(--color-muted);
     }

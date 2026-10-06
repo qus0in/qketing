@@ -2,7 +2,7 @@
 name: frontend-conventions
 description: JavaScript·CSS·SSR 템플릿의 작성과 리뷰에 일관된 프런트엔드 규칙을 적용한다. 브라우저 코드 구현·리팩터링·코드 리뷰에서 사용한다. "const 우선", "querySelector", "이벤트 위임", "flex/grid", "8px spacing", "progressive enhancement" 같은 요청에 사용.
 metadata:
-  version: "1.0"
+  version: "1.1"
 ---
 
 # 프런트엔드 컨벤션
@@ -17,7 +17,7 @@ metadata:
 2. [JavaScript](references/javascript.md)에 따라 const·ES6+·제한된 DOM 조회를 사용한다.
    이벤트는 필요한 공통 부모에 위임하고 초기화·해제 책임을 명시한다.
 3. [CSS](references/css.md)에 따라 flex 우선, 2차원 grid, 8px spacing을 적용한다.
-   position과 타이포 예외를 일반 layout 규칙과 구분한다.
+   position 정책과 border·outline 두께·타이포의 적용 범위를 구분한다.
 4. [SSR과 점진적 강화](references/ssr.md)에 따라 HTML의 기본 navigation/form을 유지한다.
    template escaping과 접근성을 보존하고 JS 실패에도 기본 동작이 남게 한다.
 5. [리뷰 체크리스트](references/review.md)의 검색과 동작 검증을 수행한다.
@@ -31,7 +31,8 @@ metadata:
   getElementById/getElementsBy* 등 다른 조회 API를 사용하지 않는다.
 - layout은 flex 우선, 행·열을 함께 다루는 2차원 구조는 grid이다.
 - position 선언은 sticky/fixed만 기본 허용하고 absolute/relative는 제한된 예외로 다룬다.
-- float를 금지하고 gap·margin·padding·border·고정 크기는 8px 배수 scale을 사용한다.
+- float를 금지하고 gap·margin·padding·고정 레이아웃 크기는 8px 배수 scale을 사용한다.
+- border·outline 두께와 타이포는 spacing scale 대상이 아니다. border는 1px·2px 등 디자인 판단을 허용하고 근거를 주석이나 리뷰에 남긴다.
 - SSR이 기본 기능을 제공하고 JS는 그 기능을 강화한다.
 
 ## 입출력 예시

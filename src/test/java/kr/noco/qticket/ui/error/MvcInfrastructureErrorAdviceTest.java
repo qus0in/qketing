@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import kr.noco.qticket.TestcontainersConfiguration;
@@ -29,6 +30,9 @@ class MvcInfrastructureErrorAdviceTest {
     @Autowired
     private WebApplicationContext context;
 
+    @Autowired
+    private BuildProperties buildProperties;
+
     @Test
     void givenUnknownHtmlPath_whenRequested_thenNotFoundErrorViewIsRendered() throws Exception {
         mvc().perform(get("/no-such-page").accept(MediaType.TEXT_HTML))
@@ -36,7 +40,17 @@ class MvcInfrastructureErrorAdviceTest {
                 .andExpect(view().name("error/404"))
                 .andExpect(content().string(not(containsString("&lt;title"))))
                 .andExpect(content().string(containsString(
-                        "<h1 id=\"error-title\">페이지를 찾을 수 없습니다</h1>")));
+                        "<h1 id=\"error-title\">페이지를 찾을 수 없습니다</h1>")))
+                .andExpect(content().string(containsString(versionLabel())))
+                .andExpect(content().string(not(containsString("-SNAPSHOT"))));
+    }
+
+    @Test
+    void givenHomePage_whenRequested_thenFooterShowsBuildVersion() throws Exception {
+        mvc().perform(get("/").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(versionLabel())))
+                .andExpect(content().string(not(containsString("-SNAPSHOT"))));
     }
 
     @Test
@@ -73,5 +87,9 @@ class MvcInfrastructureErrorAdviceTest {
     private MockMvc mvc() {
         return MockMvcBuilders.webAppContextSetup(context)
                 .addFilters(new RequestIdMdcFilter()).build();
+    }
+
+    private String versionLabel() {
+        return "v" + buildProperties.getVersion().split("-")[0];
     }
 }

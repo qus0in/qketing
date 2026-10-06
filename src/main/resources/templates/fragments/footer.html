@@ -1,3 +1,5 @@
 <footer th:fragment="footer" class="site-footer" xmlns:th="http://www.thymeleaf.org">
   <p th:text="#{footer.notice}">QTicket은 학습·검증용 비영리 프로젝트입니다.</p>
+  <!-- 표시만 정규화하고 원본은 gradle.properties에 둔다. -->
+  <small th:text="#{footer.version(${@buildProperties.version.split('-')[0]})}"></small>
 </footer>
