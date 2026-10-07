@@ -74,6 +74,7 @@ Milestone은 특정 layer에 귀속시키지 않고 HEAD #7에서 통합 관리�
 
 ## 6. 변경 이력
 
+- 2026-10-07: v0.5.0 발행 — [Release](https://github.com/qus0in/qketing/releases/tag/v0.5.0) @ `c837e09`(버전 PR #58 MERGED, tag peeled SHA 일치), main E2E [37563888027](https://github.com/qus0in/qketing/actions/runs/37563888027) success(artifact 5 tests·0 fail·0 skip·100%, 홈/404 재검토). 다음 개발 버전은 **0.6.0-SNAPSHOT**이며 전환은 별도 PR로 처리한다.
 - 2026-10-06: v0.4.0 게시 @ `4880be2`, main E2E [37440030197](https://github.com/qus0in/qketing/actions/runs/37440030197) success(5 tests·화면 검토), [Release](https://github.com/qus0in/qketing/releases/tag/v0.4.0). 0.5.0 준비 work #47.
 - 2026-10-06: milestone 13개(0.1.0~1.0.0) 생성, 로드맵 문서 신규 작성
 - 2026-10-06: minor 승격 체크리스트에 Playwright E2E 추가 (#25)
