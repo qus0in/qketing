@@ -6,7 +6,7 @@
 
 | 탭 라벨 | tab | pane | 에이전트 | 모델·effort(화면 표기) | 티어·역할 |
 | - | - | - | - | - | - |
-| orchestrator | wW:t1 | wW:p1 | Codex | GPT-6 (세션 지시 기준, effort 미확인) | 분해·배정·빌드 검증·통합·git·최종 리뷰 |
+| orchestrator | wW:t1 | wW:p1 | Codex | GPT-6.1-Sol · medium (화면 확인) | 판단·배정·최종 리뷰·git |
 | worker1 | wW:t6 | wW:p6 | OpenCode | MiMo-V2.6-Flash · OpenCode Go (effort 표시 없음) | 하: 요약·정리·단순 수정 |
 | worker2 | wW:t5 | wW:p5 | OpenCode | Muse Spark 1.3 Contributor · OpenCode Go (effort 표시 없음) | 하: 요약·정리·단순 수정 |
 | worker3 | wW:t3 | wW:p3 | OpenCode | GPT-6 Luna · OpenCode Go · max | 상: 주 구현, worker 산출물 교차 리뷰 |
@@ -49,6 +49,13 @@
 
 ## 운영 기록
 
+- 2026-10-07 T47-56 최종 승인 근거: targeted 23 suites·31 tests(2-node 11 전부 pass) · full build 72 suites·169 tests · e2e 5 — 전부 0 fail(11:18), TCP `CLIENT KILL` killed=4 자동 재연결, 403 10 round·30 opens 미재현 → 원인 미확정 유지. 이전 기준 T47-39 153/5.
+- 2026-10-07 회고: 다중 생성자 record는 canonical에 `@ConstructorBinding` 명시 / Redis `CLIENT`는 native 실 type·typed API 사용 / attempt 로그 덮어쓰기 금지(시도별 분리).
+
+- 2026-10-07 T47-40 회고 요약: **준비 DONE ≠ 실행 DONE**(계획·scaffold만으로 통과로 간주하지 말 것) / non-200 응답은 **body를 `readNBytes(4096)`으로 최대 4096바이트 보존**해 디버깅(`SseStream`) / **WS heartbeat와 SSE heartbeat(15s)를 혼동 금지** — WS는 주기 heartbeat가 없다. 상세는 `docs/realtime-operations.md` §6에 분리 기록.
+
+- 2026-10-07 다음 회차: worker1 idle 복귀(snapshot 조회), worker3 producer/WS, worker4 SSE 수정·snapshot/SSE API, worker2 2-node 계획·단독 Gradle. 다른 workspace의 worker2 이름 충돌로 잘못 전달된 지시는 철회하고 herdr-call 라벨 우선 처리 후 resolve=wW:p5 확인. 한도 %는 이번 화면에 없어 리셋 전 42%를 현재값으로 재사용하지 않는다.
+- 2026-10-06 사용자 한도 관리 지시: 5h 잔여 43%·19:00 리셋(화면 확인). 반복 읽기·빌드·검증은 worker에게 위임, 20% 아래 시 중간 보고. worker3 T47-7을 단독 Gradle 실행자로 지정하고 worker4 T47-8 교차 리뷰. worker1 /tmp 승인 대기 작업은 worker2 T47-6으로 인계(#47 댓글).
 - 2026-10-06 역할 재확인: Codex `wW:p1`을 `orchestrator`로 rename하고 응답에서 확인. `pane current --current`는 OpenCode `wW:p5`를 반환하여 agent list의 종류·cwd·대화 제목으로 본인을 식별했다. worker 모델 표는 이번에 재검증하지 않았다.
 - 2026-10-05 dry-run (#6), 읽기 전용 작업 3개를 동시에 위임
   - codex-1 (리뷰, 상): 실제 버그 2건을 찾음 (pane 이동 후 환경변수가 예전 값으로 남음, `LC_ALL=C`에서 유니코드 깨짐). 샌드박스가 herdr 소켓을 막아 BLOCKED로 보고

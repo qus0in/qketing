@@ -57,6 +57,7 @@ open build/reports/e2e        # 스크린샷 (실패 지점 포함), git 무관 
 
 ## 트러블슈팅
 
+- `Unable to locate a Java Runtime` → `/usr/bin/java`·`java_home`만 보면 사용자 설치 JDK를 놓칠 수 있음 → 위의 `~/.jdks` Temurin 경로를 명령 단위 `JAVA_HOME`/`PATH`에 적용한다. 환경 실패로 생기지 않은 테스트 결과를 이전 XML로 대신 집계하지 않는다.
 - `Port 8080 was already in use`인데 `lsof`에 안 보임 → Tailscale이 tailnet IP(100.x)의 8080을 사용 중
   → `--server.address=127.0.0.1`로 loopback에만 바인딩한다. `netstat -anv -p tcp | grep '\.8080 '`로 확인
 - 템플릿을 고쳤는데 화면이 그대로 → bootRun은 `build/resources`를 읽음 → `./gradlew processResources`
