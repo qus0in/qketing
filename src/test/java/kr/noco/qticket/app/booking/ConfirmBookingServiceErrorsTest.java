@@ -27,8 +27,9 @@ class ConfirmBookingServiceErrorsTest {
     private final BookingPersistencePort bookings = mock(BookingPersistencePort.class);
     private final SeatPersistencePort seats = mock(SeatPersistencePort.class);
     private final SeatHoldPort holds = mock(SeatHoldPort.class);
+    private final BookingCommitEffects commitEffects = mock(BookingCommitEffects.class);
     private final ConfirmBookingService service =
-            new ConfirmBookingService(bookings, seats, holds);
+            new ConfirmBookingService(bookings, seats, holds, commitEffects);
     private final ConfirmBookingCommand command =
             new ConfirmBookingCommand(PERFORMANCE_ID, SEAT_ID, KEY, HOLDER);
 

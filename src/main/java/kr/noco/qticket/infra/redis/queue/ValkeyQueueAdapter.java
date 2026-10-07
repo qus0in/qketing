@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ValkeyQueueAdapter implements QueueAdmissionPort {
     private static final String KEY_PREFIX = "qticket:queue:";
+    private static final String EVENT_PREFIX = "qticket:queue-events:";
     private static final long ACTIVE_RESULT = 1L;
     private final StringRedisTemplate redis;
     private final ValkeyProperties properties;
@@ -30,7 +31,9 @@ public class ValkeyQueueAdapter implements QueueAdmissionPort {
         Long result = redis.execute(admissionScript, List.of(activeKey, waitingKey,
                 activeSessionKey(performanceId, memberId)), memberId,
                 String.valueOf(properties.queue().capacity()),
-                String.valueOf(properties.session().ttl().toMillis()));
+                String.valueOf(properties.session().ttl().toMillis()),
+                String.valueOf(performanceId),
+                EVENT_PREFIX + "{" + performanceId + "}");
         if (result == null) {
             throw new IllegalStateException("Queue admission script returned no result");
         }

@@ -16,8 +16,9 @@ class ConfirmBookingCommandTest {
     private final BookingPersistencePort bookings = mock(BookingPersistencePort.class);
     private final SeatPersistencePort seats = mock(SeatPersistencePort.class);
     private final SeatHoldPort holds = mock(SeatHoldPort.class);
+    private final BookingCommitEffects commitEffects = mock(BookingCommitEffects.class);
     private final ConfirmBookingService service =
-            new ConfirmBookingService(bookings, seats, holds);
+            new ConfirmBookingService(bookings, seats, holds, commitEffects);
 
     @Test
     void givenInvalidCommand_whenCreated_thenInvalidInput() {
