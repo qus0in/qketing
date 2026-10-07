@@ -49,6 +49,8 @@
 
 ## 운영 기록
 
+- 2026-10-07 T56-10 회고: **버전 머지 SHA로 E2E를 다시 돌리고 artifact를 재검토한다**(PR #55 이전 success는 대체 불가 → v0.5.0은 run 37563888027로 재검증) / "release workflow 자동 tag-version 검증" 서술은 실제 없어 **수동 절차로 교정**(roadmap §3·§5) / 스킬 기존 미커밋분은 **전체 제외**를 보존한다.
+
 - 2026-10-07 T47-56 최종 승인 근거: targeted 23 suites·31 tests(2-node 11 전부 pass) · full build 72 suites·169 tests · e2e 5 — 전부 0 fail(11:18), TCP `CLIENT KILL` killed=4 자동 재연결, 403 10 round·30 opens 미재현 → 원인 미확정 유지. 이전 기준 T47-39 153/5.
 - 2026-10-07 회고: 다중 생성자 record는 canonical에 `@ConstructorBinding` 명시 / Redis `CLIENT`는 native 실 type·typed API 사용 / attempt 로그 덮어쓰기 금지(시도별 분리).
 
