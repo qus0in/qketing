@@ -50,7 +50,7 @@ Milestone은 특정 layer에 귀속시키지 않고 HEAD #7에서 통합 관리�
 | 릴리스 기록 | GitHub Release |
 
 - Gradle `version`은 `gradle.properties`에서 관리하고 build script에 중복 하드코딩하지 않는다.
-- release workflow는 Git tag와 Gradle version 일치를 검증하고 불일치 시 실패시킨다.
+- release workflow는 **없다**(workflows는 `ci.yml`·`e2e.yml`뿐) → Git tag와 Gradle version 일치는 **수동으로 확인**한다(불일치면 tag 없이 중단).
 - milestone은 계획된 통합 목표이며, Git tag는 검증이 끝난 릴리스 확정점이다.
 - GitHub milestone이 존재한다고 자동으로 release된 것으로 간주하지 않는다.
 - `0.x.0-SNAPSHOT` 개발 중에는 breaking change를 허용하고, `1.0.0`부터 최초 stable contract로 본다.
@@ -67,8 +67,10 @@ Milestone은 특정 layer에 귀속시키지 않고 HEAD #7에서 통합 관리�
 ## 5. minor 승격 체크리스트
 
 1. milestone의 work 이슈 완료, `./gradlew build` 통과
-2. E2E 통과: `gh workflow run e2e.yml --ref dev` 성공 + artifact `e2e-report` 스크린샷 검토 (로컬 `./gradlew e2eTest`)
-3. `handle` 이슈로 사용자 승인 → version `X.Y.0` → tag `vX.Y.0` → GitHub Release → `X.(Y+1).0-SNAPSHOT`
+2. **사용자 승인**(`handle` 이슈) → **version `X.Y.0` PR**(dev→main) → **CI 머지**
+3. **머지한 main merge SHA**로 `gh workflow run e2e.yml --ref main` **success** + artifact `e2e-report` 스크린샷 재검토 (로컬 `./gradlew e2eTest`은 보조)
+4. **일치 확인 성공 시에만** tag `vX.Y.0` → GitHub Release → 다음 `X.(Y+1).0-SNAPSHOT` PR
+5. **E2E 실패 또는 일치 확인 불가 시: tag 없이 BLOCKED로 보고**(tag/Release 발행 금지)
 
 ## 6. 변경 이력
 
